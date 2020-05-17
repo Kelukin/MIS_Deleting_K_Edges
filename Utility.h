@@ -15,6 +15,12 @@
 #include <iostream>
 typedef unsigned int ui;
 
+struct NodeList{
+    NodeList* nxt;
+    NodeList* bf;
+    int no;
+    int degree;
+};
 //#define __LINUX__
 #ifdef __LINUX__
 #include <sys/time.h>
