@@ -4,6 +4,10 @@
 
 #include "EdgeDeleteIndex.h"
 
+void EdgeDeleteIndex::setNotifier(Notifier *_notifier) {
+    this->notifier = _notifier;
+}
+
 void EdgeDeleteIndex::setReverseRelation(ui edgeNo_a, ui edgeNo_b) {
     DeleteBlock* aBlock = edge2deleteBlock[edgeNo_a];
     DeleteBlock* bBlock = edge2deleteBlock[edgeNo_b];
@@ -21,6 +25,14 @@ void EdgeDeleteIndex::swap(ui edge_a, ui edge_b) {
     edge2deleteBlock[edge_a] = edge2deleteBlock[edge_b];
     edge2deleteBlock[edge_b] = block;
 }
+bool EdgeDeleteIndex::hasDeletedEdge(ui u) {
+    DeleteBlock* tmp = nodeList[u];
+    while(tmp != nullptr){
+        if(tmp->valid) return true;
+        tmp = tmp->nxt;
+    }
+    return false;
+}
 
 int EdgeDeleteIndex::deleteVertex(ui no) {
     // return the number of k to be restored.
@@ -36,11 +48,30 @@ int EdgeDeleteIndex::deleteVertex(ui no) {
     while(tmp != nullptr){
         // Try to drawback the K value
         if(tmp->valid)  ++cnt;
+
+
+        DeleteBlock* tmp_r = tmp->reverse;
+        if(tmp_r->pre) {
+            tmp_r->pre->nxt = tmp_r->nxt;
+        }
+        if(tmp_r->nxt) {
+            tmp_r->nxt->pre = tmp_r->pre;
+        }
+        if(nodeList[tmp_r->x] == tmp_r) {
+            nodeList[tmp_r->x] = tmp_r->nxt;
+        }
+
+        tmp_r->pre = tmp_r->nxt = nullptr;
+
+        //judge if tmp_r -> x no longer related to a deleted edge.
+        if(notifier && tmp_r -> valid && !nodeList[tmp_r->x])
+            notifier->addItem(tmp_r->x);
+
         tmp->valid = tmp->reverse->valid = false;
         tmp = tmp -> nxt;
     }
     drawbackCnt += cnt;
-    printf("%d\n", drawbackCnt);
+//    printf("%d\n", drawbackCnt);
     return cnt;
 }
 

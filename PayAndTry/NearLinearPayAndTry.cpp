@@ -1,9 +1,8 @@
 //
-// Created by Kelukin on 2020/4/7.
+// Created by Kelukin on 2020/5/27.
 //
 
-#include "PayAndTry.h"
-
+#include "NearLinearPayAndTry.h"
 
 bool NearLinearPayAndTry::check_result(ui mis_size, ui ori_k) {
 #ifndef NDEBUG
@@ -24,19 +23,18 @@ bool NearLinearPayAndTry::check_result(ui mis_size, ui ori_k) {
     return true;
 }
 
-
 void NearLinearPayAndTry::edge_rewire(ui u, ui u1, ui u2) {
     for(ui i = pstart[u];i < pstart[u+1];i ++) if(edges[i] == u1) {
-        edges[i] = u2;
-        break;
-    }
+            edges[i] = u2;
+            break;
+        }
 }
 
 
 ui NearLinearPayAndTry::edge_rewire(ui u, const ui *pend, ui v, ui w) {
 #ifndef NDEBUG
     for(ui i = pstart[u];i < pend[u];i ++) if(edges[i] == w && edgeValid[i])
-        printf("WA preexist edge!\n");
+            printf("WA preexist edge!\n");
 #endif
 
     for(ui i = pstart[u];i < pend[u];i ++) if(edges[i] == v && edgeValid[i]) {
@@ -47,82 +45,16 @@ ui NearLinearPayAndTry::edge_rewire(ui u, const ui *pend, ui v, ui w) {
     printf("WA in edge_rewire!\n");
     return 0;
 }
-
-int PayAndTry::getMISSize() {
-    int ret = 0;
-    for(ui i = 0; i < n; ++i)
-        if(is[i])  ++ret;
-    return ret;
-}
-
-void PayAndTry::get_two_neighbors(ui u, ui &u1, ui &u2) {
-    for(ui i = pstart[u];i < pstart[u+1];i ++) if(is[edges[i]]) {
-        if(u1 == n) {
-            u1 = edges[i];
-            std::swap(edges[pstart[u]], edges[i]);
-        }
-        else {
-            assert(u2 == n);
-            u2 = edges[i];
-            std::swap(edges[pstart[u]+1], edges[i]);
-            break;
-        }
-    }
-}
-
 ui NearLinearPayAndTry::get_other_neighbor(ui u, ui u1) {
     ui idx = 0;
     for(ui i = pstart[u];i < pstart[u+1];i ++) if(is[edges[i]]) {
-        if(edgeValid && !edgeValid[i])  continue;
-        std::swap(edges[pstart[u]+idx], edges[i]);
-        if((++ idx) == 2) break;
-    }
+            if(edgeValid && !edgeValid[i])  continue;
+            std::swap(edges[pstart[u]+idx], edges[i]);
+            if((++ idx) == 2) break;
+        }
     assert(edges[pstart[u]] == u1||edges[pstart[u]+1] == u1);
     if(edges[pstart[u]] == u1) return edges[pstart[u]+1];
     return edges[pstart[u]];
-}
-
-bool PayAndTry::exist_edge(ui u1, ui u2) {
-    if(pstart[u1 + 1]-pstart[u1] < pstart[u2+1]-pstart[u2]) {
-        for(ui i = pstart[u1];i < pstart[u1+1];i ++) if(edges[i] == u2 ) return true;
-        return false;
-    }
-    for(ui i = pstart[u2];i < pstart[u2+1];i ++) if(edges[i] == u1) return true;
-    return false;
-}
-
-int PayAndTry::init_given_set() {
-    ui cost = 0;
-    for(ui i = 0 ; i < gs_length; ++i){
-        int x = given_set[i];
-        is[x] = 2;
-    }
-
-    for(ui i = 0; i < gs_length; ++i){
-        int x = given_set[i];
-        for(ui k = pstart[x]; k < pstart[x + 1]; ++k)
-            if(is[edges[k]] == 2)   ++cost;
-            else if(is[edges[k]] == 1){
-                delete_vertex(edges[k], is, degree);
-            }
-    }
-    cost >>= 1;
-
-    for(ui i = 0; i < gs_length; ++i){
-        int x = given_set[i];
-        delete_vertex(x, is, degree);
-    }
-
-    return cost;
-}
-
-void PayAndTry::delete_vertex(ui v, char *is, int *degree) {
-    is[v] = 0;
-    for(ui k = pstart[v]; k < pstart[v + 1]; ++k)
-        if(is[edges[k]]){
-            int w = edges[k];
-            --degree[w];
-        }
 }
 
 int NearLinearPayAndTry::delete_vertex(ui v, char *is, int *degree, std::vector<ui> &degree_ones,
@@ -130,12 +62,12 @@ int NearLinearPayAndTry::delete_vertex(ui v, char *is, int *degree, std::vector<
     is[v] = 0;
     int res = 0;
     for(ui k = pstart[v];k < pstart[v+1];k ++) if(is[edges[k]]) {
-        int w = edges[k];
-        -- degree[w];
-        if(degree[w] == 0) ++ res;
-        else if(degree[w] == 1) degree_ones.push_back(w);
-        else if(degree[w] == 2) degree_twos.push_back(w);
-    }
+            int w = edges[k];
+            -- degree[w];
+            if(degree[w] == 0) ++ res;
+            else if(degree[w] == 1) degree_ones.push_back(w);
+            else if(degree[w] == 2) degree_twos.push_back(w);
+        }
     return res;
 }
 
@@ -272,6 +204,14 @@ void NearLinearPayAndTry::shrink(ui u, ui &end) {
     }
 }
 
+void NearLinearPayAndTry::addDominated(ui u, ui v) {
+    if(edgeDeleteIndex->hasDeletedEdge(u)){
+        // in high priority
+        dominated.push_back(u);
+    }
+    else dominated.push_front(u);
+}
+
 int NearLinearPayAndTry::compute_triangle_counts() {
     std::vector<ui> vs;
     for(ui i = 0;i < n;i ++) if(is[i]&&degree[i] > 0) vs.push_back(i);
@@ -325,11 +265,11 @@ int NearLinearPayAndTry::compute_triangle_counts() {
                             }
                             if(!dominate[v]&&tri[k]+1 == degree[w]) {
                                 dominate[v] = 1;
-                                dominated.push_back(v);// waiting for further process/ Having not been deleted
+                                addDominated(v, w);// waiting for further process/ Having not been deleted
                             }
                             if(!dominate[w]&&tri[k]+1 == degree[v]) {
                                 dominate[w] = 1;
-                                if(order[w] > i) dominated.push_back(w);
+                                if(order[w] > i) addDominated(w, v);
                             }
 #ifndef NDEBUG
                             if(order[w] == i) printf("%d %d %d %d\n", w, order[w], u, i);
@@ -350,7 +290,7 @@ int NearLinearPayAndTry::compute_triangle_counts() {
                 assert(tri[j]+1 != degree[v]);
                 if(!dominate[v]&&tri[j]+1 == degree[u]) {
                     dominate[v] = 1;
-                    if(order[v] > i) dominated.push_back(v);
+                    if(order[v] > i) addDominated(v, u);
                 }
             }
         }
@@ -589,11 +529,11 @@ void NearLinearPayAndTry::update_triangle(ui u1, ui u2) {
             ++ cnt;
             if(tri[i]+1 == degree[u2]&&!dominate[v]) {
                 dominate[v] = 1;
-                dominated.push_back(v);
+                addDominated(v, u2);
             }
             if(tri[i]+1 == degree[v]&&!dominate[u2]) {
                 dominate[u2] = 1;
-                dominated.push_back(u2);
+                addDominated(u2, v);
             }
 
             for(ui j = pstart[v];j < pend[v];j ++) if(edges[j] == u2) {
@@ -615,11 +555,11 @@ void NearLinearPayAndTry::update_triangle(ui u1, ui u2) {
 
     if(cnt+1 == degree[u1]&&!dominate[u2]) {
         dominate[u2] = 1;
-        dominated.push_back(u2);
+        addDominated(u2, u1);
     }
     if(cnt+1 == degree[u2]&&!dominate[u1]) {
         dominate[u1] = 1;
-        dominated.push_back(u1);
+        addDominated(u1, u2);
     }
 
     for(ui i = pstart[u2];i < pend[u2];i ++) adj[edges[i]] = 1;
@@ -631,11 +571,11 @@ void NearLinearPayAndTry::update_triangle(ui u1, ui u2) {
             edgeDeleteIndex->descDiffValue(i);
             if(tri[i]+1 == degree[u1]&&!dominate[v]) {
                 dominate[v] = 1;
-                dominated.push_back(v);
+                addDominated(v, u1);
             }
             if(tri[i]+1 == degree[v]&&!dominate[u1]) {
                 dominate[u1] = 1;
-                dominated.push_back(u1);
+                addDominated(u1, v);
             }
 
             for(ui j = pstart[v];j < pend[v];j ++) if(edges[j] == u1) {
@@ -655,7 +595,7 @@ void NearLinearPayAndTry::update_triangle(ui u1, ui u2) {
     }
 }
 
-bool NearLinearPayAndTry::canReduction() {
+bool NearLinearPayAndTry::canSafeReduction() {
     return !dominated.empty() || !degree_twos.empty();
 }
 
@@ -740,7 +680,6 @@ bool NearLinearPayAndTry::dominated_check(ui u) {
 }
 
 int NearLinearPayAndTry::delete_vertex_dominate(ui u) {
-    //it means the maintenance of diff is something wrong
     shrink(u, pend[u]);//certain the range in [pstart[u], pend[u]) must be valid
     is[u] = 0;
     k += edgeDeleteIndex->deleteVertex(u);
@@ -750,12 +689,12 @@ int NearLinearPayAndTry::delete_vertex_dominate(ui u) {
         ui v = edges[i];
         adj[v] = 1;
         -- degree[v];
-            for(ui j = pstart[v]; j < pend[v]; ++j){
-                int w = edges[j];
-                if(!is[w] || (edgeValid && !edgeValid[j]))  continue;
-                edgeDeleteIndex->descDiffValue(reverseEdge[j]); // descend, because of the change of degree[v]
-                assert(edges[reverseEdge[j]] == v);
-            }
+        for(ui j = pstart[v]; j < pend[v]; ++j){
+            int w = edges[j];
+            if(!is[w] || (edgeValid && !edgeValid[j]))  continue;
+            edgeDeleteIndex->descDiffValue(reverseEdge[j]); // descend, because of the change of degree[v]
+            assert(edges[reverseEdge[j]] == v);
+        }
         if(degree[v] == 0)  ++res;
         else if(degree[v] == 2) degree_twos.push_back(v);
     }
@@ -771,13 +710,10 @@ int NearLinearPayAndTry::delete_vertex_dominate(ui u) {
                 if(adj[w]){
                     --tri[j];
                     edgeDeleteIndex->incDiffValue(j);
-
-//                    --tri[reverseEdge[j]];
-//                    edgeDeleteIndex->incDiffValue(reverseEdge[j]);
                 }
-                if(tri[j] + 1 == degree[v] && !dominate[v]){
+                if(tri[j] + 1 == degree[v] && !dominate[w]){
                     dominate[w] = 1;
-                    dominated.push_back(w);
+                    addDominated(w, v);
                 }
             }
     }
@@ -818,9 +754,9 @@ void NearLinearPayAndTry::init(){
     if(ids_n > 0) lp_reduction(ids, ids_n);
     assert(degree_ones.empty()&&degree_twos.empty());
     for(ui i = 0;i < ids_n;i ++) if(is[ids[i]]&&degree[ids[i]] > 0) {
-        if(degree[ids[i]] == 1) degree_ones.push_back(ids[i]);
-        else if(degree[ids[i]] == 2) degree_twos.push_back(ids[i]);
-    }
+            if(degree[ids[i]] == 1) degree_ones.push_back(ids[i]);
+            else if(degree[ids[i]] == 2) degree_twos.push_back(ids[i]);
+        }
 
     remove_degree_one_two();
 
@@ -832,9 +768,9 @@ void NearLinearPayAndTry::init(){
         if(!is[i]||degree[i] <= 0) continue;
 
         for(ui j = tmp;j < pstart[i+1];j ++) if(is[edges[j]]) {
-            assert(degree[edges[j]] > 0);
-            edges[new_m ++] = edges[j];
-        }
+                assert(degree[edges[j]] > 0);
+                edges[new_m ++] = edges[j];
+            }
     }
     pstart[n] = new_m;
 
@@ -940,7 +876,7 @@ void NearLinearPayAndTry::last_delete() {
     LastDeleter::greedy_delete_edges(is, tmp_pstart, tmp_edges, k, n);
 }
 
-void NearLinearPayAndTry::reduction() {
+void NearLinearPayAndTry::safe_reduction() {
     while(!dominated.empty()){
         ui u = dominated.back();
         dominated.pop_back();
@@ -1059,19 +995,19 @@ void NearLinearPayAndTry::reduction() {
                 assert(degree[u1] > 1&&degree[u2] > 1);
 
                 for(ui k = pstart[u1];k < pend[u1];k ++) if(edgeValid[k]){
-                    if(is[edges[k]]&&!dominate[edges[k]]&&tri[k]+1 == degree[u1]) {
-                        dominate[edges[k]] = 1;
-                        dominated.push_back(edges[k]);
+                        if(is[edges[k]]&&!dominate[edges[k]]&&tri[k]+1 == degree[u1]) {
+                            dominate[edges[k]] = 1;
+                            addDominated(edges[k], u1);
+                        }
+                        edgeDeleteIndex->descDiffValue(reverseEdge[k]);
                     }
-                    edgeDeleteIndex->descDiffValue(reverseEdge[k]);
-                }
                 for(ui k = pstart[u2];k < pend[u2];k ++) if(edgeValid[k]){
-                    if(is[edges[k]]&&!dominate[edges[k]]&&tri[k]+1 == degree[u2]) {
-                        dominate[edges[k]] = 1;
-                        dominated.push_back(edges[k]);
+                        if(is[edges[k]]&&!dominate[edges[k]]&&tri[k]+1 == degree[u2]) {
+                            dominate[edges[k]] = 1;
+                            addDominated(edges[k], u2);
+                        }
+                        edgeDeleteIndex->descDiffValue(reverseEdge[k]);
                     }
-                    edgeDeleteIndex->descDiffValue(reverseEdge[k]);
-                }
             }
             else {
                 ui idx = edge_rewire(u1, pend, v1, u2);
@@ -1120,7 +1056,7 @@ void NearLinearPayAndTry::deleteEdge(int edgeNo, int u, int v) {
         } else if(degree[u] - 1 == tri[i]){
             if(!dominate[edges[i]]){
                 dominate[edges[i]] = 1;
-                dominated.push_back(edges[i]);
+                addDominated(edges[i], u);
             }
         }
     }
@@ -1138,7 +1074,7 @@ void NearLinearPayAndTry::deleteEdge(int edgeNo, int u, int v) {
         } else if(degree[v] - 1 == tri[i]){
             if(!dominate[edges[i]]){
                 dominate[edges[i]] = 1;
-                dominated.push_back(edges[i]);
+                addDominated(edges[i], v);
             }
         }
     }
@@ -1163,49 +1099,46 @@ int NearLinearPayAndTry::pay() {
     auto tmp = edgeDeleteIndex->getMinCostEdge();
     if(k < tmp.first)   return -1;
 
-    if(tmp.first >=5) return -1;
+//    if(tmp.first >=5) return -1;
 
     k -= tmp.first;
     std::pair<ui, ui> &p = tmp.second;
     int x = p.first, y = p.second;
-//    if(degree[x] <= degree[y])  std::swap(x, y);
     shrink(y, pend[y]);
     shrink(x, pend[x]);
     edgeDeleteIndex->getMinCostEdge();
     for(ui i = pstart[x]; i < pend[x]; ++i) if(edgeValid[i] && is[edges[i]]){
-        pay_adj[edges[i]] = 1;
-    }
+            pay_adj[edges[i]] = 1;
+        }
     pay_adj[x] = 1;
 #ifndef NDEBUG
     int cnt = 0;
-//    int tri_cnt = 0;
 #endif
     for(ui i = pstart[y]; i < pend[y]; ++i)
         if(edgeValid[i]){
-        if(!pay_adj[edges[i]] && is[edges[i]]){
-            deleteEdge(i, y, edges[i]);
+            if(!pay_adj[edges[i]] && is[edges[i]]){
+                deleteEdge(i, y, edges[i]);
 #ifndef NDEBUG
-            ++cnt;
+                ++cnt;
 #endif
+            }
         }
-//        else if (pay_adj[edges[i]]) ++tri_cnt;
-    }
 
     for(ui i = pstart[x]; i < pend[x]; ++i) if(edgeValid[i]){
             pay_adj[edges[i]] = 0;
-    }
+        }
     pay_adj[x] = 0;
 
 #ifndef NDEBUG
     assert(cnt == tmp.first);
 #endif
-    assert(!dominated.empty());
+//    assert(!dominated.empty());
     return 0;
 }
 
 void NearLinearPayAndTry::clear_S() {
     for(std::vector< std::pair<ui, ui> >::reverse_iterator
-    it = S.rbegin(); it != S.rend(); ++it){
+                it = S.rbegin(); it != S.rend(); ++it){
         ui u1 = it->first, u2 = it->second;
         assert(is[u1] == 0);
         if(u2 != n){
@@ -1236,3 +1169,8 @@ bool NearLinearPayAndTry::exist_edge(ui u1, ui u2) {
 
 void NearLinearPayAndTry::debugCheck() {
 }
+bool NearLinearPayAndTry::canRiskReduction() {
+    return false;
+}
+
+void NearLinearPayAndTry::riskReduction() {}

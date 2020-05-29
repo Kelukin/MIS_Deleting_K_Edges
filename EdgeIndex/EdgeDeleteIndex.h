@@ -1,10 +1,12 @@
 //
 // Created by Kelukin on 2020/4/13.
 //
-#include "Utility.h"
 
 #ifndef MIS_DELETING_K_EDGES_EDGEDELETEINDEX_H
 #define MIS_DELETING_K_EDGES_EDGEDELETEINDEX_H
+#include "../Utility.h"
+#include "../Widget/Notifier.h"
+
 struct DeleteBlock{
     //delete block for one edge
     // if it is in bin, then y_nxt, y_pre is always nullptr
@@ -38,9 +40,11 @@ protected:
     int drawbackCnt;
     int const *degree;
     ui up;
+    Notifier* notifier;
     virtual int getRankValue(DeleteBlock* blk, int value);
 public:
     EdgeDeleteIndex(ui n, ui m, int max_d, ui *edges, char *_is, ui *r_edges, ui *pstart, ui *pend, int const *_degree){
+        notifier = nullptr;
         drawbackCnt = 0;
         degree = _degree;
         up = m;
@@ -95,8 +99,8 @@ public:
     void edgeRewire(ui edgeNo, ui u, ui old_v, ui new_v);
     int getDiffValue(int no);
     void deleteEdge(ui edge_no);
-
-
+    bool hasDeletedEdge(ui u);
+    void setNotifier(Notifier *_notifier);
 };
 
 

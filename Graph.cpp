@@ -147,14 +147,15 @@ void Graph::read_graph() {
     }
     fclose(f);
 
-    f = open_file((dir + std::string("_given_set.bin")).c_str(), "rb");
-    if(f != NULL){
-        fread(&gs_length, sizeof(int), 1, f);
-        given_set = new ui[gs_length];
-        fread(given_set, sizeof(int), gs_length, f);
-    } else{
-        gs_length = 0;
-    }
+    gs_length = 0;
+//    f = open_file((dir + std::string("_given_set.bin")).c_str(), "rb");
+//    if(f != NULL){
+//        fread(&gs_length, sizeof(int), 1, f);
+//        given_set = new ui[gs_length];
+//        fread(given_set, sizeof(int), gs_length, f);
+//    } else{
+//        gs_length = 0;
+//    }
 
     delete[] buf;
 
@@ -789,8 +790,8 @@ int Graph::pay_and_try_framework(PayAndTry* payAndTry) {
         // Second to recycle the paid k
         // Record the vertices has been affected in last roll, and check its out edge's state, whether is has been
         // delete during the new reduction rules.
-        while(payAndTry->canReduction())
-            payAndTry->reduction();//appear bug after one time of reduction
+        while(payAndTry->canSafeReduction())
+            payAndTry->safe_reduction();//appear bug after one time of reduction
         payAndTry->debugCheck();
         // If we still have the rest bullet for deleting edges
         if(payAndTry->isDone()) break;
@@ -800,7 +801,9 @@ int Graph::pay_and_try_framework(PayAndTry* payAndTry) {
         }else{
             // Else, we have to try inexact strategy
             // And see the next roll activate the reductions in next iteration
-            payAndTry->inexact_delete();
+            if(payAndTry->canRiskReduction())
+                payAndTry->riskReduction();
+            else payAndTry->inexact_delete();
         };
 
     }while(true);
@@ -1478,6 +1481,10 @@ void Graph::near_maximum_near_linear(ui k) {
 void Graph::pay_and_try_dominate_max_degree_greedy_delete_edges(ui k) {
     PayAndTry* payAndTry = new NearLinearPayAndTry(n, m, given_set, gs_length,
             pstart, edges, k);
+
+//    PayAndTry* payAndTry = new RiskPayAndTry(n, m, given_set, gs_length
+//            , pstart, edges, k);
+    payAndTry->init();
     int res = pay_and_try_framework(payAndTry);
     printf("The MIS size get by PayAndTry-dominate_max_degree_greedy after deleting %d edges is %d\n",
             k, res);

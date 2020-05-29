@@ -6,7 +6,9 @@
 #define MIS_DELETING_K_EDGES_GRAPH_H
 
 #include "Utility.h"
-#include "PayAndTry.h"
+#include "PayAndTry/PayAndTry.h"
+#include "PayAndTry/NearLinearPayAndTry.h"
+#include "PayAndTry/RiskPayAndTry.h"
 struct Edge {
     int id, duplicate;
     int next;
