@@ -9,6 +9,7 @@
 #include "PayAndTry/PayAndTry.h"
 #include "PayAndTry/NearLinearPayAndTry.h"
 #include "PayAndTry/RiskPayAndTry.h"
+#include "ExactSolver.h"
 struct Edge {
     int id, duplicate;
     int next;
@@ -49,11 +50,9 @@ public:
     void check_is(const char *is, int count, int k = 0);
     void greedy(ui k = 0);
     void read_graph();
-    void dfs_maximum_value(ui k = 0); //尝试找到精确解
-    void domination_greedy_delete_edges(ui k = 0);
     void pay_and_try_dominate_max_degree_greedy_delete_edges(ui k = 0);
-    void pay_and_try_two_kernel_max_degree_greedy_delete_edges(ui k = 0);
     void near_maximum_near_linear(ui k = 0);
+    void exact_solver(ui k = 0);
 };
 
 #endif //MIS_DELETING_K_EDGES_GRAPH_H

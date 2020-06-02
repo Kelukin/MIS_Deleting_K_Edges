@@ -1479,15 +1479,21 @@ void Graph::near_maximum_near_linear(ui k) {
 }
 
 void Graph::pay_and_try_dominate_max_degree_greedy_delete_edges(ui k) {
-    PayAndTry* payAndTry = new NearLinearPayAndTry(n, m, given_set, gs_length,
-            pstart, edges, k);
+//    PayAndTry* payAndTry = new NearLinearPayAndTry(n, m, given_set, gs_length,
+//            pstart, edges, k);
 
-//    PayAndTry* payAndTry = new RiskPayAndTry(n, m, given_set, gs_length
-//            , pstart, edges, k);
+    PayAndTry* payAndTry = new RiskPayAndTry(n, m, given_set, gs_length
+            , pstart, edges, k);
     payAndTry->init();
     int res = pay_and_try_framework(payAndTry);
     printf("The MIS size get by PayAndTry-dominate_max_degree_greedy after deleting %d edges is %d\n",
             k, res);
     assert(payAndTry->check_result(res, k));
     delete payAndTry;
+}
+
+void Graph::exact_solver(ui k) {
+    ExactSolver solver(n, m, given_set, gs_length, pstart, edges);
+    printf("The result calculated by ExactSolver is : %d \n",
+            solver.solve(k));
 }

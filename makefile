@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS=-O3
-OBJ = main.o Graph.o Utility.o PayAndTry.o LastDeleter.o EdgeDeleteIndex.o ProfitDeleteIndex.o
+OBJ = main.o Graph.o Utility.o PayAndTry.o NearLinearPayAndTry.o RiskPayAndTry.o LastDeleter.o EdgeDeleteIndex.o ProfitDeleteIndex.o ExactSolver.o
 
 all:mis
 

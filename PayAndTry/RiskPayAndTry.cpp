@@ -111,7 +111,8 @@ void RiskPayAndTry::riskReduction() {
 }
 
 bool RiskPayAndTry::canSafeReduction() {
-    return !dominated.empty() || (!degree_twos.empty() && riskDominated.empty());
+    return ( ++reduct_cnt > 5 && !degree_twos.empty()) || !dominated.empty()
+            || (!degree_twos.empty() && riskDominated.empty());
 }
 
 void RiskPayAndTry::safe_reduction() {
@@ -130,7 +131,7 @@ void RiskPayAndTry::safe_reduction() {
         if(!dominated_check(u)) dominate[u] = 0;
         else delete_vertex_dominate(u);
     }
-    if(++reduct_cnt > 10){
+    if(reduct_cnt > 5){
         reduct_cnt = 0;
         while(!riskDominated.empty())   riskReduction();
     }
@@ -205,6 +206,7 @@ void RiskPayAndTry::degree2Reduction(){
                 if(dominated.empty() && riskDominated.empty()){
                     printf("error %d\n", u);
                 }
+
                 assert(!dominated.empty() || !riskDominated.empty());
             }
             else if(cnt > 1) {

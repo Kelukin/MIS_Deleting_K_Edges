@@ -17,3 +17,4 @@ ui Notifier::getItem(){
 void Notifier::addItem(ui x){
     changedVertices.push(x);
 }
+ 
