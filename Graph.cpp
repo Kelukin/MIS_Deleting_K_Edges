@@ -1484,6 +1484,8 @@ void Graph::pay_and_try_dominate_max_degree_greedy_delete_edges(ui k) {
 
 //    PayAndTry* payAndTry = new RiskPayAndTry(n, m, given_set, gs_length
 //            , pstart, edges, k);
+#ifdef _LINUX_
+#endif
     payAndTry->init();
     int res = pay_and_try_framework(payAndTry);
     printf("The MIS size get by PayAndTry-dominate_max_degree_greedy after deleting %d edges is %d\n",

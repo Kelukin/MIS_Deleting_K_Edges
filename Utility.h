@@ -20,7 +20,7 @@ struct NodeList{
     int no;
     int degree;
 };
-//#define __LINUX__
+#define __LINUX__
 #ifdef __LINUX__
 #include <sys/time.h>
 #endif
