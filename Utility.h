@@ -24,7 +24,8 @@ struct NodeList{
 #ifdef __LINUX__
 #include <sys/time.h>
 #endif
-#define CHECK_BUG
+//#define CHECK_BUG
+#define NDEBUG
 FILE *open_file(const char *file_name, const char *mode);
 
 #endif //MIS_DELETING_K_EDGES_UTILITY_H
