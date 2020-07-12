@@ -14,7 +14,6 @@
 #include <queue>
 #include <iostream>
 typedef unsigned int ui;
-
 struct NodeList{
     NodeList* nxt;
     NodeList* bf;

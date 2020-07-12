@@ -6,7 +6,6 @@
 #define MIS_DELETING_K_EDGES_EDGEDELETEINDEX_H
 #include "../Utility.h"
 #include "../Widget/Notifier.h"
-
 struct DeleteBlock{
     //delete block for one edge
     // if it is in bin, then y_nxt, y_pre is always nullptr

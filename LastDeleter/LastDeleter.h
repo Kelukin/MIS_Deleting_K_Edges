@@ -2,7 +2,7 @@
 // Created by Kelukin on 2020/4/8.
 //
 
-#include "Utility.h"
+#include "../Utility.h"
 #ifndef MIS_DELETING_K_EDGES_LASTDELETER_H
 #define MIS_DELETING_K_EDGES_LASTDELETER_H
 
@@ -21,6 +21,7 @@ public:
     LastDeleter(const LastDeleter &obj) = delete;
     LastDeleter operator = (const LastDeleter &obj) = delete;
     static int greedy_delete_edges(char *is, ui *pstart, ui *edges, ui k, ui n);
+    static int smart_delete_edges(char *is, ui *pstart, ui *edges, ui k, ui n, ui* given_set, ui gs_length);
 };
 
 

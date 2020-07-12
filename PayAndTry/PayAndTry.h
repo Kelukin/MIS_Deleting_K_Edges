@@ -6,7 +6,7 @@
 #define MIS_DELETING_K_EDGES_PAYANDTRY_H
 
 #include "../Utility.h"
-#include "../LastDeleter.h"
+#include "../LastDeleter/LastDeleter.h"
 #include "../EdgeIndex/EdgeDeleteIndex.h"
 #include "../EdgeIndex/ProfitDeleteIndex.h"
 class PayAndTry {

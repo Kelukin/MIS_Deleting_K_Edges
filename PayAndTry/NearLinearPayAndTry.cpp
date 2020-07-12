@@ -3,7 +3,7 @@
 //
 
 #include "NearLinearPayAndTry.h"
-
+extern int INDEX_TYPE;
 bool NearLinearPayAndTry::check_result(ui mis_size, ui ori_k) {
 #ifndef NDEBUG
     ui conflict_cnt = 0;
@@ -842,8 +842,10 @@ void NearLinearPayAndTry::init(){
 
     fixed = new char[n];
     memset(fixed, 0, sizeof(char) * n);
-//    if(new_m != 0)    edgeDeleteIndex = new EdgeDeleteIndex(n, new_m, max_d, edges, is, reverseEdge, pstart, pend, degree);
-    if(new_m != 0) edgeDeleteIndex = new ProfitDeleteIndex(n, new_m, max_d, edges, is, reverseEdge, pstart, pend, degree);
+    if(new_m != 0){
+        if(INDEX_TYPE == 1) edgeDeleteIndex = new ProfitDeleteIndex(n, new_m, max_d, edges, is, reverseEdge, pstart, pend, degree);
+        else edgeDeleteIndex = new EdgeDeleteIndex(n, new_m, max_d, edges, is, reverseEdge, pstart, pend, degree);
+    }
     for(ui i = 0; i < n; ++i)
         if(is[i] && degree[i]>0)
             for(ui u = pstart[i]; u < pend[i]; ++u){
@@ -855,7 +857,7 @@ void NearLinearPayAndTry::init(){
             }
 
 }
-
+extern  int LAST_DELETE_TYPE;
 void NearLinearPayAndTry::last_delete() {
     printf("the residual K is %d\n", k);
     for(ui i = 0; i < gs_length; ++i)
@@ -869,7 +871,8 @@ void NearLinearPayAndTry::last_delete() {
             }
     k = ori_k - k/2;
     printf("the fact residul K is %d\n", k);
-    LastDeleter::greedy_delete_edges(is, tmp_pstart, tmp_edges, k, n);
+    if(LAST_DELETE_TYPE == 0) LastDeleter::greedy_delete_edges(is, tmp_pstart, tmp_edges, k, n);
+    else LastDeleter::smart_delete_edges(is, tmp_pstart, tmp_edges, k, n, given_set, gs_length);
 }
 
 void NearLinearPayAndTry::safe_reduction() {
@@ -1149,6 +1152,7 @@ void NearLinearPayAndTry::clear_S() {
 void NearLinearPayAndTry::appending_action() {
     clear_S();
 }
+
 
 bool NearLinearPayAndTry::exist_edge(ui u1, ui u2) {
     if(pstart[u1 + 1]-pstart[u1] < pstart[u2+1]-pstart[u2]) {
