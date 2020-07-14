@@ -3,7 +3,7 @@
 //
 
 #include "Graph.h"
-
+#include "LocalSearch/BasicVersion.h"
 Graph::Graph(const char *_dir) {
     dir = std::string(_dir);
     n = m = 0;
@@ -384,7 +384,34 @@ int Graph::initial_dominance_and_degree_two_remove(std::vector<ui> &degree_ones,
 
     return res;
 }
+void check_is(const char *is, int count, ui n, int k, ui *pstart, ui *edges){
+    int cnt = 0;
 
+//    for(ui i = 0; i < n; i++)   if(is[i])   cnt++;
+//    if(count != cnt)    printf("WA count in check_is! %d\n", cnt);
+
+    cnt = 0;//conflict count
+
+    bool maximal = true;
+    for(ui i = 0; i < n; i++){
+        if(is[i]){
+            for(ui j = pstart[i]; j < pstart[i + 1]; j++)
+                if(is[edges[j]] > 0)    ++cnt;
+        }else if(maximal){
+            bool find = false;
+            for(ui j = pstart[i]; j < pstart[i + 1] && !find; j++)
+                if(is[edges[j]])    find = true;
+            if(!find)   maximal = false;
+        }
+    }
+    if(!maximal)    printf("WA!!!!!!!!! Not Maximal!");
+    assert((cnt & 1) == 0);
+    cnt >>= 1;
+    if(cnt > k) printf("WA!!!!!!! Delete more than k edges!!! %d", cnt);
+    printf("residual k: %d, assumed %d\n", k - cnt, count);
+    assert(count == k - cnt);
+    assert(cnt <=k);
+}
 
 
 void Graph::check_is(const char *is, int count, int k) {
@@ -411,6 +438,7 @@ void Graph::check_is(const char *is, int count, int k) {
     assert((cnt & 1) == 0);
     cnt >>= 1;
     if(cnt > k) printf("WA!!!!!!! Delete more than k edges!!!");
+    assert(cnt <=k);
 }
 void Graph::construct_degree_increase(ui *ids) {
     memset(ids, 0, sizeof(ui)*n);
@@ -766,7 +794,8 @@ void Graph::greedy(ui k) {
 #ifdef CHECK_BUG
     check_is(is, res, origin_k);
 #endif
-
+    BasicVersion localSearch(n, m, given_set, gs_length, pstart, edges, origin_k, is);
+    localSearch.iterate_local_search();
     delete[] is;
 
 #ifdef __LINUX__

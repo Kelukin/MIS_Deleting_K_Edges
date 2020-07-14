@@ -3,6 +3,7 @@
 //
 
 #include "LastDeleter.h"
+#include "../Utility.h"
 #include <unordered_set>
 int LastDeleter::greedy_delete_edges(char *is, ui *pstart, ui *edges, ui k, ui n) {
     int res = 0;
@@ -65,62 +66,8 @@ int LastDeleter::greedy_delete_edges(char *is, ui *pstart, ui *edges, ui k, ui n
     return res;
 }
 
-void putNodeList(NodeList* node, NodeList** list, int targetNo){
-    if(list[targetNo] != NULL)  list[targetNo]->bf = node;
-    node->bf = NULL;
-    node->nxt = list[targetNo];
-    node->degree = targetNo;
-    list[targetNo] = node;
-}
-
-void rmNodeList(NodeList* node, NodeList** list, int targetNo){
-    if(list[targetNo] == node) list[targetNo] = list[targetNo]->nxt;
-    if(node->bf != NULL) node->bf->nxt = node->nxt;
-    if(node->nxt != NULL) node->nxt->bf = node->bf;
-    node->bf = node->nxt = NULL;
-}
 
 LastDeleter* LastDeleter::lastDeleter = nullptr;
-void put_out_S(int nodeNo, char *is, ui *pstart, ui *edges, NodeList* pool,
-               int &lb_out, NodeList** inDegreeHead, NodeList** outDegreeHead){
-    rmNodeList(pool + nodeNo, inDegreeHead, pool[nodeNo].degree);
-    putNodeList(pool + nodeNo, outDegreeHead, pool[nodeNo].degree);
-    for(ui i = pstart[nodeNo]; i < pstart[nodeNo + 1]; ++i){
-        int x = edges[i];
-        if(is[x] == 1){
-            int no = pool[x].degree;
-            rmNodeList(pool + x, inDegreeHead, no);
-            putNodeList(pool + x, inDegreeHead, no - 1);
-        }else if(is[x] == 0){
-            int no = pool[x].degree;
-            rmNodeList(pool + x, outDegreeHead, no);
-            putNodeList(pool + x, outDegreeHead, no - 1);
-            if(no - 1 < lb_out) lb_out = no - 1;
-        }
-    }
-    is[nodeNo] = 0;
-}
-
-void put_in_S(int nodeNo, char *is, ui *pstart, ui *edges, NodeList* pool,
-              int &ub_in, NodeList** inDegreeHead, NodeList** outDegreeHead){
-    is[nodeNo] = 1;
-
-    rmNodeList(pool + nodeNo, outDegreeHead, pool[nodeNo].degree);
-    putNodeList(pool + nodeNo, inDegreeHead, pool[nodeNo].degree);
-    for(ui i = pstart[nodeNo]; i < pstart[nodeNo + 1]; ++i){
-        int x = edges[i];
-        if(is[x] == 1){
-            int no = pool[x].degree;
-            rmNodeList(pool + x, inDegreeHead, no);
-            putNodeList(pool + x, inDegreeHead, no + 1);
-            if(no + 1 > ub_in) ub_in = no + 1;
-        }else if(is[x] == 0){
-            int no = pool[x].degree;
-            rmNodeList(pool + x, outDegreeHead, no);
-            putNodeList(pool + x, outDegreeHead, no + 1);
-        }
-    }
-}
 
 int LastDeleter::smart_delete_edges(char *is, ui *pstart, ui *edges, ui k, ui n, ui *given_set, ui gs_length) {
     std::unordered_set<int> hash;

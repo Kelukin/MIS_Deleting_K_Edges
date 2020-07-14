@@ -20,7 +20,14 @@ struct NodeList{
     int no;
     int degree;
 };
-#define __LINUX__
+void putNodeList(NodeList* node, NodeList** list, int targetNo);
+void rmNodeList(NodeList* node, NodeList** list, int targetNo);
+void put_out_S(int nodeNo, char *is, ui *pstart, ui *edges, NodeList* pool,
+               int &lb_out, NodeList** inDegreeHead, NodeList** outDegreeHead);
+
+void put_in_S(int nodeNo, char *is, ui *pstart, ui *edges, NodeList* pool,
+              int &ub_in, NodeList** inDegreeHead, NodeList** outDegreeHead);
+//#define __LINUX__
 #ifdef __LINUX__
 #include <sys/time.h>
 #endif
