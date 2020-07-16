@@ -93,7 +93,7 @@ int LastDeleter::smart_delete_edges(char *is, ui *pstart, ui *edges, ui k, ui n,
                 if(is[edges[j]] != 0) ++degreeCnt;
             NodeList **degreeHead;
             if(is[i] == 0){
-                assert(degreeCnt != 0);
+//                assert(degreeCnt != 0);
                 lb_out = std::min(lb_out, degreeCnt);
                 degreeHead = outDegreeHead;
             }else{

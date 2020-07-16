@@ -13,6 +13,9 @@
 
 class BasicVersion {
 protected:
+#ifdef __LINUX__
+    struct timeval start, end;
+#endif
     ui n, m;
     ui *given_set;
     ui gs_length;
@@ -101,6 +104,9 @@ public:
             , NodeList** inList, NodeList** outList, std::vector<int> &inArea);
     virtual bool accept(int tmpSize, int res_k);
     virtual char* getOptimum();
+    int getOptimumSize(){
+        return oSize;
+    }
     virtual bool canStop();
     void iterate_local_search();
     int getVertexNum(){

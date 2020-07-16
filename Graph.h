@@ -10,6 +10,7 @@
 #include "PayAndTry/NearLinearPayAndTry.h"
 #include "PayAndTry/RiskPayAndTry.h"
 #include "ExactSolver.h"
+extern  bool LOCALSEARCH;
 void check_is(const char *is, int count, ui n, int k, ui *pstart, ui *edges);
 struct Edge {
     int id, duplicate;

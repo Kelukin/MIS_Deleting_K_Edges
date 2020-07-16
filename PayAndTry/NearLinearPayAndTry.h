@@ -83,6 +83,7 @@ public:
     void inexact_delete() override ;
     int pay() override ;
     void last_delete() override;
+    void localSearch() override;
     virtual void safe_reduction() override ;
     virtual bool canSafeReduction() override ;
     bool isDone() override ;

@@ -4,6 +4,7 @@
 
 #include "BasicVersion.h"
 #include "../Graph.h"
+extern int TIME_THRESHOLD;
 void BasicVersion::pertubation(char *is, int &res_k, std::vector<int>& inArea, bool* in) {
     bool canFinish = false;
     inArea.clear();
@@ -28,13 +29,16 @@ void BasicVersion::pertubation(char *is, int &res_k, std::vector<int>& inArea, b
     }
 }
 bool BasicVersion::canStop() {
-    printf("%d\n",oSize);
+#ifdef __LINUX__
+    gettimeofday(&end, NULL);
+    double mtime = end.tv_sec - start.tv_sec +
+            (end.tv_usec - start.tv_usec) / 1000000.0;
+    if(mtime >= TIME_THRESHOLD)
+        return  true;
+#endif
     return false;
 }
 void BasicVersion::iterate_local_search() {
-#ifdef __LINUX__
-
-#endif
 #ifndef NDEBUG
     check_is(currentSolution, c_k, n, total_k, pstart, edges);
 #endif
@@ -44,6 +48,9 @@ void BasicVersion::iterate_local_search() {
     NodeList* tmpPool = new NodeList[n];
     NodeList** inQDegreeHead_tmp = new NodeList*[maxd];
     NodeList** outQDegreeHead_tmp = new NodeList*[maxd];
+#ifdef __LINUX__
+    gettimeofday(&start, NULL);
+#endif
     memcpy(tmpIs, currentSolution, sizeof(char) * n);
     for(ui i = 0; i < n; ++i)
         in[i] = currentSolution[i] != 0;
@@ -74,6 +81,13 @@ void BasicVersion::iterate_local_search() {
             if(tmpSize > oSize){
                 oSize = tmpSize;
                 memcpy(optimumSolution, currentSolution, sizeof(char) * n);
+#ifdef __LINUX__
+                gettimeofday(&end, NULL);
+                double duration = end.tv_sec - start.tv_sec
+                                    + (end.tv_usec - start.tv_usec) / 1000000.0;
+                printf("get |Q| = %d, at %f s \n",
+                        oSize, duration);
+#endif
             }
 #ifndef NDEBUG
             check_is(currentSolution, c_k, n, total_k, pstart, edges);

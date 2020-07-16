@@ -5,6 +5,8 @@
 int INDEX_TYPE = 0;
 int LAST_DELETE_TYPE = 1;
 int THRESHOLD = -1;
+int TIME_THRESHOLD = 100;
+bool LOCALSEARCH = true;
 FILE *open_file(const char *filename, const char *mode){
     FILE *f = fopen(filename, mode);
     if(f == NULL){

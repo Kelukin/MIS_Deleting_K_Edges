@@ -780,10 +780,10 @@ void Graph::greedy(ui k) {
     }
     delete[] ids;
 #ifdef __LINUX__
-    gettimeofday(&endl, NULL);
+    gettimeofday(&end, NULL);
     long long mtime1, seconds1, useconds1;
     seconds1 = end.tv_sec - start.tv_sec;
-    usecond1 = end.tv_sec - start.tv_usec;
+    useconds1 = end.tv_usec - start.tv_usec;
     mtime1 = seconds1 * 1000000 + useconds1;
 #endif
     greedy_delete_edges(is, k);
@@ -791,23 +791,28 @@ void Graph::greedy(ui k) {
     for(ui i = 0; i < n; i++)
         if(is[i]>0)   ++res;
     printf("Greedy MIS: %d\n", res);
-#ifdef CHECK_BUG
-    check_is(is, res, origin_k);
-#endif
-    BasicVersion localSearch(n, m, given_set, gs_length, pstart, edges, origin_k, is);
-    localSearch.iterate_local_search();
-    delete[] is;
+
+
 
 #ifdef __LINUX__
     gettimeofday(&end, NULL);
     long long mtime, seconds, useconds;
-    seconfs = end.tv_sec - start.tv_sec;
+    seconds = end.tv_sec - start.tv_sec;
     useconds = end.tv_usec - start.tv_usec;
     mtime = seconds * 1000000 + useconds;
 
     printf("Process time: %lld, Swap time: %lld, Total time: %lld\n", mtime1, mtime - mtime1, mtime);
 #endif
-
+    if(LOCALSEARCH){
+        BasicVersion localSearch(n, m, given_set, gs_length, pstart, edges, origin_k, is);
+        localSearch.iterate_local_search();
+#ifdef CHECK_BUG
+//        printf("Begin Check!");
+        check_is(localSearch.getOptimum(),
+                localSearch.getOptimumSize(), origin_k);
+#endif
+    }
+    delete[] is;
 }
 
 int Graph::pay_and_try_framework(PayAndTry* payAndTry) {
@@ -1024,7 +1029,7 @@ void Graph::near_maximum_near_linear(ui k) {
     ui origin_k = k;
 //#endif
 
-#ifdef _LINUX_
+#ifdef __LINUX__
     struct timeval start, end1, end;
 	gettimeofday(&start, NULL);
 #endif
@@ -1082,7 +1087,7 @@ void Graph::near_maximum_near_linear(ui k) {
 
     res += initial_dominance_and_degree_two_remove(degree_ones, degree_twos, is, degree, adj, S);
 
-#ifdef _LINUX_
+#ifdef __LINUX__
     struct timeval end_t1;
 	gettimeofday(&end_t1, NULL);
 #endif
@@ -1115,7 +1120,7 @@ void Graph::near_maximum_near_linear(ui k) {
 
     if(ids_n > 0) res += lp_reduction(ids, ids_n, is, degree);
 
-#ifdef _LINUX_
+#ifdef __LINUX__
     struct timeval end_t2;
 	gettimeofday(&end_t2, NULL);
 #endif
@@ -1172,7 +1177,7 @@ void Graph::near_maximum_near_linear(ui k) {
 
     res += compute_triangle_counts(tri, pend, adj, is, degree, dominate, dominated);
 
-#ifdef _LINUX_
+#ifdef __LINUX__
     struct timeval end_t3;
 	gettimeofday(&end_t3, NULL);
 
@@ -1444,7 +1449,7 @@ void Graph::near_maximum_near_linear(ui k) {
     delete[] dominate;
     delete[] adj;
 
-#ifdef _LINUX_
+#ifdef __LINUX__
     gettimeofday(&end1, NULL);
 
 	long long mtime1, seconds1, useconds1;
@@ -1491,11 +1496,19 @@ void Graph::near_maximum_near_linear(ui k) {
 //    compute_upperbound(is, fixed);
     check_is(is, res, origin_k);
 #endif
-
+    if(LOCALSEARCH){
+        BasicVersion localSearch(n, m, given_set, gs_length, pstart, edges, origin_k, is);
+        localSearch.iterate_local_search();
+#ifdef CHECK_BUG
+        //        printf("Begin Check!");
+        check_is(localSearch.getOptimum(),
+                localSearch.getOptimumSize(), origin_k);
+#endif
+    }
     delete[] is;
     delete[] fixed;
 
-#ifdef _LINUX_
+#ifdef __LINUX__
     gettimeofday(&end, NULL);
 
 	long long mtime, seconds, useconds;
@@ -1513,12 +1526,25 @@ void Graph::pay_and_try_dominate_max_degree_greedy_delete_edges(ui k) {
 
 //    PayAndTry* payAndTry = new RiskPayAndTry(n, m, given_set, gs_length
 //            , pstart, edges, k);
-#ifdef _LINUX_
+#ifdef __LINUX__
+    struct timeval start, endl, end;
+    gettimeofday(&start, NULL);
 #endif
     payAndTry->init();
     int res = pay_and_try_framework(payAndTry);
     printf("The MIS size get by PayAndTry-dominate_max_degree_greedy after deleting %d edges is %d\n",
             k, res);
+#ifdef __LINUX__
+    gettimeofday(&end, NULL);
+    long long mtime, seconds, useconds;
+    seconds = end.tv_sec - start.tv_sec;
+    useconds = end.tv_usec - start.tv_usec;
+    mtime = seconds * 1000000 + useconds;
+
+    printf("Process time: %lld\n",mtime);
+#endif
+    if(LOCALSEARCH)
+        payAndTry->localSearch();
     assert(payAndTry->check_result(res, k));
     delete payAndTry;
 }

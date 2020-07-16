@@ -6,7 +6,11 @@
 
 
 
+void  PayAndTry::localSearch() {
+    BasicVersion localSearch(n, m, given_set, gs_length, pstart, edges, ori_k, is);
+    localSearch.iterate_local_search();
 
+}
 
 int PayAndTry::getMISSize() {
     int ret = 0;

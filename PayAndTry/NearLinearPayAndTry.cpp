@@ -4,6 +4,13 @@
 
 #include "NearLinearPayAndTry.h"
 extern int INDEX_TYPE;
+void NearLinearPayAndTry::localSearch() {
+    BasicVersion localSearch(n, m, given_set, gs_length, tmp_pstart, tmp_edges, ori_k, is);
+    localSearch.iterate_local_search();
+    const char *ret = localSearch.getOptimum();
+    memcpy(is, ret, sizeof(char) * n);
+
+}
 bool NearLinearPayAndTry::check_result(ui mis_size, ui ori_k) {
 #ifndef NDEBUG
     ui conflict_cnt = 0;
