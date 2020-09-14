@@ -10,6 +10,7 @@ void print_usage(){
 extern int INDEX_TYPE;
 extern int LAST_DELETE_TYPE;
 extern int THRESHOLD;
+extern char LOG_PATH[];
 int main(int argc, char *argv[]) {
     if(argc < 3){
         print_usage();

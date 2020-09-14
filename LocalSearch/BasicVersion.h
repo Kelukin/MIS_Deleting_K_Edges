@@ -11,6 +11,8 @@
 #include <cstdlib>
 
 
+extern char LOG_PATH[];
+extern bool LOG_FLAG;
 class BasicVersion {
 protected:
 #ifdef __LINUX__
@@ -33,12 +35,14 @@ protected:
     NodeList **outQDegreeHead;
     unsigned int maxd;
     int lb_out, ub_in;
+    FILE* fp;
 public:
     BasicVersion(const BasicVersion &obj) = delete;
     BasicVersion(ui _n, ui _m, ui* _give_set
             , ui _gs_length, ui* _pstart, ui* _edges, ui _k, char* is): n(_n), m(_m)
             , given_set(_give_set), gs_length(_gs_length), pstart(_pstart),
             edges(_edges), total_k(_k){
+        fp = NULL;
         srand(time(NULL));
         maxd = 0;
         lb_out = n;
@@ -99,11 +103,14 @@ public:
         optimumSolution = new char[n];
         memcpy(optimumSolution, is, sizeof(char) * n);
     }
-    virtual void pertubation(char *is, int &res_k, std::vector<int>& inArea, bool* in);
-    virtual void localsearch(char *is, int& tmpSize, int &res_k, NodeList* pool
+    virtual void perturbation(char *is, int &res_k, std::vector<int>& inArea, bool* in);
+    virtual void localSearch(char *is, int& tmpSize, int &res_k, NodeList* pool
             , NodeList** inList, NodeList** outList, std::vector<int> &inArea);
     virtual bool accept(int tmpSize, int res_k);
     virtual char* getOptimum();
+    void outputLog(std::vector<int>& inArea, std::vector<int>& outArea, int old_size, int new_size);
+
+    void outputLogConflictEdges();
     int getOptimumSize(){
         return oSize;
     }
@@ -113,6 +120,7 @@ public:
         return n;
     }
     virtual ~BasicVersion(){
+        if(fp != NULL)  fclose(fp);
         delete[] currentSolution;
         delete[] optimumSolution;
         delete[] pool;

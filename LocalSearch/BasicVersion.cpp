@@ -5,7 +5,7 @@
 #include "BasicVersion.h"
 #include "../Graph.h"
 extern int TIME_THRESHOLD;
-void BasicVersion::pertubation(char *is, int &res_k, std::vector<int>& inArea, bool* in) {
+void BasicVersion::perturbation(char *is, int &res_k, std::vector<int>& inArea, bool* in) {
     bool canFinish = false;
     inArea.clear();
     auto it = history.begin();
@@ -28,6 +28,39 @@ void BasicVersion::pertubation(char *is, int &res_k, std::vector<int>& inArea, b
         it = tmpIt;
     }
 }
+void BasicVersion::outputLogConflictEdges() {
+    if(!LOG_FLAG)   return;
+    if(fp == NULL){
+        fp = fopen(LOG_PATH, "w");
+    }
+    for(int i = 0; i < n; ++i)
+        if(currentSolution[i]){
+            for(int j = pstart[i]; j < pstart[i + 1]; ++j){
+                ui x = edges[j];
+                if(currentSolution[x] && x < i){
+                    fprintf(fp, "%d %d\n", x, i);
+                }
+            }
+        }
+    fprintf(fp, "\n");
+}
+void BasicVersion::outputLog(std::vector<int> &inArea, std::vector<int>& outArea, int old_size, int new_size) {
+    if(!LOG_FLAG)   return;
+    if(fp == NULL){
+        fp = fopen(LOG_PATH, "w");
+    }
+
+//    printf("write\n");
+    fprintf(fp, "%d %d ", old_size, new_size);
+    fprintf(fp, "%d ", inArea.size());
+    for(auto inVertex:inArea)
+        fprintf(fp, "%d ", inVertex);
+
+    fprintf(fp, "%d ", outArea.size());
+    for(auto outVertex : outArea)
+        fprintf(fp, "%d ", outVertex);
+    fprintf(fp, "\n");
+}
 bool BasicVersion::canStop() {
 #ifdef __LINUX__
     gettimeofday(&end, NULL);
@@ -42,6 +75,10 @@ void BasicVersion::iterate_local_search() {
 #ifndef NDEBUG
     check_is(currentSolution, c_k, n, total_k, pstart, edges);
 #endif
+    std::vector<int>
+
+
+    outArea;
     std::vector<int> inArea;
     char *tmpIs = new char[n];
     bool* in = new bool[n];
@@ -52,8 +89,9 @@ void BasicVersion::iterate_local_search() {
     gettimeofday(&start, NULL);
 #endif
     memcpy(tmpIs, currentSolution, sizeof(char) * n);
-    for(ui i = 0; i < n; ++i)
+    for(ui i = 0; i < n; ++i) {
         in[i] = currentSolution[i] != 0;
+    }
     while(!canStop()){
         memcpy(outQDegreeHead_tmp, outQDegreeHead, sizeof(NodeList*) * maxd);
         memcpy(inQDegreeHead_tmp, inQDegreeHead, sizeof(NodeList*) * maxd);
@@ -61,22 +99,24 @@ void BasicVersion::iterate_local_search() {
         memcpy(tmpIs, currentSolution, sizeof(char) * n);
         int tmpSize = cSize;
         int tmp_k =  c_k;
-        pertubation(tmpIs, tmp_k, inArea, in);
-        if(tmp_k >= 0 ) localsearch(tmpIs, tmpSize, tmp_k, pool, inQDegreeHead_tmp, outQDegreeHead_tmp, inArea);
+        perturbation(tmpIs, tmp_k, inArea, in);
+        if(tmp_k >= 0 ) localSearch(tmpIs, tmpSize, tmp_k, pool, inQDegreeHead_tmp, outQDegreeHead_tmp, inArea);
         if(accept(tmpSize, tmp_k)){
-
+            outArea.clear();
             std::swap(tmpIs, currentSolution);
-            cSize = tmpSize;
-            c_k = tmp_k;
-            std::swap(inQDegreeHead_tmp, inQDegreeHead);
-            std::swap(outQDegreeHead_tmp, outQDegreeHead);
             for(ui i = 0; i < n; ++i)
                 if(in[i] != currentSolution[i]){
                     if(in[i]){
+                        outArea.push_back(i);
                         history.push_back(i);
                     }
                     in[i] = currentSolution[i] > 0;
                 }
+//            outputLog(inArea, outArea, cSize, tmpSize);
+            cSize = tmpSize;
+            c_k = tmp_k;
+            std::swap(inQDegreeHead_tmp, inQDegreeHead);
+            std::swap(outQDegreeHead_tmp, outQDegreeHead);
 
             if(tmpSize > oSize){
                 oSize = tmpSize;
@@ -107,7 +147,7 @@ void BasicVersion::iterate_local_search() {
     delete[] outQDegreeHead_tmp;
 }
 
-void BasicVersion::localsearch(char *is, int& tmpSize, int &res_k, NodeList* pool
+void BasicVersion::localSearch(char *is, int& tmpSize, int &res_k, NodeList* pool
         , NodeList** inList, NodeList** outList, std::vector<int> &inArea) {
     // the ub_in and lb_out call for backing up before entering this function
     // we can assume that the outList and inList have been well maintained.
@@ -210,14 +250,22 @@ void BasicVersion::localsearch(char *is, int& tmpSize, int &res_k, NodeList* poo
 
 bool BasicVersion::accept(int tmpSize, int res_k) {
     static int rejectCnt = 0;
+    static bool outputtedFlag = false;
     if(res_k < 0) return false;
     if(tmpSize > cSize){
         rejectCnt = 0;
+        outputtedFlag = false;
         return true;
     }
     if(rejectCnt > cSize){
+        if(!outputtedFlag){
+            outputtedFlag = true;
+            outputLogConflictEdges();
+        }
         long long base = 1 + 1LL *(cSize - tmpSize) * (oSize - tmpSize);
-        if( (rand() % base) == 1) return  true;
+        if( (rand() % base) == 1) {
+
+        }return  true;
     }
     ++rejectCnt;
     return false;

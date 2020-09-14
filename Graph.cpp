@@ -1021,6 +1021,16 @@ void Graph::update_triangle(ui u1, ui u2, ui *pend, char *is, char *adj, ui *tri
 
 void Graph::near_maximum_near_linear(ui k) {
     //copy and used for last greedy deleting edges
+    typedef std::pair<int, double> id_probability;
+    auto cmp = [](id_probability a, id_probability b) {return a.second < b.second; };
+    std::priority_queue<id_probability , std::vector<id_probability>, decltype(cmp) > pro_qu(cmp);
+    if(LOG_USE){
+        std::vector<double> ret = getLogProbability(n);
+
+        for(int i = 0; i < n; ++i)
+            pro_qu.push(std::make_pair(i, ret[i]));
+    }
+
     ui *tmp_edges = new ui[m];
     for(ui i = 0;i < m;i ++) tmp_edges[i] = edges[i];
     ui *tmp_pstart = new ui[n+1];
@@ -1375,6 +1385,27 @@ void Graph::near_maximum_near_linear(ui k) {
         }
 
         while(dominated.empty()&&degree_twos.empty()) {//peeling
+            if(LOG_USE){
+                bool flag = true;
+                while(true){
+                    if(pro_qu.empty()){
+                        flag = false;
+                        break;
+                    }
+                    auto tmp = pro_qu.top();
+                    pro_qu.pop();
+                    if(!is[tmp.first])  continue;
+                    int x = tmp.first;
+                    for(ui i = pstart[x]; i < pstart[x + 1]; ++i)
+                        if(is[edges[i]]){
+                            res += delete_vertex(edges[i], pend, is, degree_twos, tri, adj, degree, dominate, dominated);
+                        }
+                    break;
+
+                }
+                if(flag)    continue;
+            }
+
             while(max_d >= 3&&bin_head[max_d] == -1) -- max_d;
             if(max_d < 3) break;
 

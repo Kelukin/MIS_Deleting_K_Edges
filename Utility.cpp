@@ -2,11 +2,14 @@
 // Created by Kelukin on 2020/3/16.
 //
 #include "Utility.h"
-int INDEX_TYPE = 0;
+int INDEX_TYPE = 1;
 int LAST_DELETE_TYPE = 1;
-int THRESHOLD = -1;
+int THRESHOLD = 20;
 int TIME_THRESHOLD = 100;
 bool LOCALSEARCH = true;
+char LOG_PATH[] = "./log.txt";
+bool LOG_FLAG = true;
+bool LOG_USE = false;
 FILE *open_file(const char *filename, const char *mode){
     FILE *f = fopen(filename, mode);
     if(f == NULL){
@@ -16,6 +19,7 @@ FILE *open_file(const char *filename, const char *mode){
 
     return f;
 }
+
 void putNodeList(NodeList* node, NodeList** list, int targetNo){
     if(list[targetNo] != NULL)  list[targetNo]->bf = node;
     node->bf = NULL;
@@ -69,4 +73,33 @@ void put_in_S(int nodeNo, char *is, ui *pstart, ui *edges, NodeList* pool,
             putNodeList(pool + x, outDegreeHead, no + 1);
         }
     }
+}
+
+
+std::vector<double> getLogProbability(int vertexNum){
+    std::vector<double> ret(vertexNum, -1);
+    std::vector<int> cnt(vertexNum, 0);
+    std::vector<int> pos(vertexNum, 0);
+    FILE  *fp = fopen(LOG_PATH, "r");
+    int oldValue, newValue;
+    while(fscanf(fp, "%d%d", &oldValue, &newValue) != EOF){
+        int num;
+        int x;
+        fscanf(fp, "%d", &num);
+        for(int i = 0; i < num; ++i){
+            fscanf(fp, "%d", &x);
+            if(newValue > oldValue) ++pos[x];
+            ++cnt[x];
+        }
+        fscanf(fp, "%d", &num);
+        for(int i = 0; i < num; ++i)
+            fscanf(fp, "%d", &x);
+    }
+    for(int i = 0; i < vertexNum; ++i){
+        if(cnt[i] != 0)
+            ret[i] = double(pos[i]) / cnt[i];
+    }
+
+    fclose(fp);
+    return ret;
 }
