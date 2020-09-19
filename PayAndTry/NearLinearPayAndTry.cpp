@@ -1108,7 +1108,7 @@ int NearLinearPayAndTry::pay() {
     int x = p.first, y = p.second;
     shrink(y, pend[y]);
     shrink(x, pend[x]);
-    edgeDeleteIndex->getMinCostEdge();
+//    edgeDeleteIndex->getMinCostEdge();
     for(ui i = pstart[x]; i < pend[x]; ++i) if(edgeValid[i] && is[edges[i]]){
             pay_adj[edges[i]] = 1;
         }

@@ -8,12 +8,6 @@ void EdgeDeleteIndex::setNotifier(Notifier *_notifier) {
     this->notifier = _notifier;
 }
 
-void EdgeDeleteIndex::setReverseRelation(ui edgeNo_a, ui edgeNo_b) {
-    DeleteBlock* aBlock = edge2deleteBlock[edgeNo_a];
-    DeleteBlock* bBlock = edge2deleteBlock[edgeNo_b];
-    aBlock->reverse = bBlock;
-    bBlock->reverse = aBlock;
-}
 
 
 void EdgeDeleteIndex::swap(ui edge_a, ui edge_b) {
@@ -21,17 +15,7 @@ void EdgeDeleteIndex::swap(ui edge_a, ui edge_b) {
     diff[edge_a] = diff[edge_b];
     diff[edge_b] = t;
 
-    DeleteBlock* block = edge2deleteBlock[edge_a];
-    edge2deleteBlock[edge_a] = edge2deleteBlock[edge_b];
-    edge2deleteBlock[edge_b] = block;
-}
-bool EdgeDeleteIndex::hasDeletedEdge(ui u) {
-    DeleteBlock* tmp = nodeList[u];
-    while(tmp != nullptr){
-        if(tmp->valid) return true;
-        tmp = tmp->nxt;
-    }
-    return false;
+    BaseEdgeIndex::swap(edge_a, edge_b);
 }
 
 int EdgeDeleteIndex::deleteVertex(ui no) {
@@ -175,15 +159,7 @@ void EdgeDeleteIndex::descDiffValue(ui edgeNo) {
 void EdgeDeleteIndex::incDiffValue(ui edgeNo) {
     this->setDiffValue(edgeNo, diff[edgeNo] + 1);
 }
-void EdgeDeleteIndex::edgeRewire(ui edgeNo, ui u, ui old_v, ui new_v) {
-    DeleteBlock *cur = edge2deleteBlock[edgeNo];
-    if((cur->x == u && cur->y == new_v)
-        || (cur->x == new_v && cur->y == u))
-        return;
-    assert(cur->x == old_v || cur -> y == old_v);
-    if(cur->x == old_v) cur->x = new_v;
-    else cur-> y = new_v;
-}
+
 
 int EdgeDeleteIndex::getDiffValue(int no) {
     if( no > up) return -100;
