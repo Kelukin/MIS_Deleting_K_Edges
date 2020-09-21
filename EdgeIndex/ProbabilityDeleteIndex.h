@@ -11,9 +11,14 @@
 #include <queue>
 extern char LOG_PATH[];
 typedef std::pair<unsigned long long, int> edge_cnt;
-bool operator <(edge_cnt &a, edge_cnt &b){
-    return a.second < b.second;
-}
+struct EdgeCnt{
+    unsigned long long edgeHash;
+    int cnt;
+    EdgeCnt(unsigned long long _hash, int _cnt): edgeHash(_hash), cnt(_cnt){}
+    bool operator <(const EdgeCnt &ano) const {
+        return cnt < ano.cnt;
+    }
+};
 class ProbabilityDeleteIndex : public EdgeDeleteIndex {
 protected:
     unsigned long long edge2Ull(ui x, ui y){
@@ -21,7 +26,7 @@ protected:
     }
     std::unordered_map<unsigned long long, int> edgeCnt;
     void calProbability();
-    std::priority_queue<edge_cnt> qu;
+    std::priority_queue<EdgeCnt> qu;
 public:
     ProbabilityDeleteIndex(ui n, ui m, int max_d, ui* edges, char* _is, ui* r_edges, ui *pstart, ui *pend, int const *_degree):
             EdgeDeleteIndex(n, m, max_d, edges, _is, r_edges, pstart, pend, _degree){

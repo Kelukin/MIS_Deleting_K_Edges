@@ -15,7 +15,7 @@ void ProbabilityDeleteIndex::calProbability() {
     }
 
     for(auto it = edgeCnt.begin(); it != edgeCnt.end(); ++it){
-        qu.push(std::make_pair(it->first, it->second));
+        qu.push(EdgeCnt(it->first, it->second));
     }
 
 }
@@ -24,7 +24,7 @@ std::pair<ui, ui> ProbabilityDeleteIndex::recommendEdge() {
     if(qu.empty())  return std::make_pair(-1, -1);
     else{
         auto p = qu.top();
-        auto hashValue = p.first;
+        auto hashValue = p.edgeHash;
 
         //decode
 

@@ -129,7 +129,35 @@ void ProbabilityPayAndTry::init() {
 }
 
 
+//int ProbabilityPayAndTry::pay() {
+//    if(k == 0)  return -1;
+//    auto tmp = edgeDeleteIndex->
+//}
+void ProbabilityPayAndTry::inexact_delete() {}
+
 int ProbabilityPayAndTry::pay() {
-    if(k == 0)  return -1;
-    auto tmp = edgeDeleteIndex->
+    return 0;
 }
+
+void ProbabilityPayAndTry::last_delete() {}
+
+void ProbabilityPayAndTry::appending_action() {}
+
+void ProbabilityPayAndTry::debugCheck() {}
+
+bool ProbabilityPayAndTry::canSafeReduction() {
+    return false;
+}
+
+bool ProbabilityPayAndTry::canRiskReduction() {
+
+    return true;
+}
+
+void ProbabilityPayAndTry::riskReduction() {}
+
+bool ProbabilityPayAndTry::isDone() {
+    return true;
+}
+
+void ProbabilityPayAndTry::localSearch() {}
