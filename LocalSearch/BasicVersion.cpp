@@ -38,6 +38,8 @@ void BasicVersion::outputLogConflictEdges() {
             for(int j = pstart[i]; j < pstart[i + 1]; ++j){
                 ui x = edges[j];
                 if(currentSolution[x] && x < i){
+                    if(x == 3208 && i ==3422)
+                        printf("%d %d %d", x, i, j);
                     fprintf(fp, "%d %d\n", x, i);
                 }
             }
@@ -140,6 +142,7 @@ void BasicVersion::iterate_local_search() {
             }
         }
     }
+    outputLogConflictEdges();
     delete[] in;
     delete[] tmpIs;
     delete[] tmpPool;
@@ -192,12 +195,15 @@ void BasicVersion::localSearch(char *is, int& tmpSize, int &res_k, NodeList* poo
         }
     }
 #ifndef NDEBUG
-    check_is(is, res_k, n, total_k, pstart, edges);
+//    printf("Mid Check Begin!\n");
+//    check_is(is, res_k, n, total_k, pstart, edges);
+//    printf("Mid Check OK!\n");
 #endif
     while(ub_in > lb_out || lb_out <=res_k){
         while(outList[lb_out] == NULL && lb_out < n) ++lb_out;
         while(inList[ub_in] == NULL && ub_in > 0) ub_in--;
         if(lb_out == n) break;
+//        if(lb_out > res_k && ub_in <= lb_out)  continue;
 
         // we may add the module of (1,2)swap
 
@@ -257,11 +263,14 @@ bool BasicVersion::accept(int tmpSize, int res_k) {
         outputtedFlag = false;
         return true;
     }
-    if(rejectCnt > cSize){
+    if(rejectCnt > std::min(cSize, 500)){
         if(!outputtedFlag){
             outputtedFlag = true;
+            printf("cSize %d\n", cSize);
             outputLogConflictEdges();
         }
+    }
+    if(rejectCnt > cSize){
         long long base = 1 + 1LL *(cSize - tmpSize) * (oSize - tmpSize);
         if( (rand() % base) == 1) {
 

@@ -8,24 +8,25 @@
 #include "../EdgeIndex/ProbabilityDeleteIndex.h"
 class ProbabilityPayAndTry : public NearLinearPayAndTry {
 protected:
-    EdgeDeleteIndex *edgeDeleteIndex;
+    ProbabilityDeleteIndex *edgeDeleteIndex;
     ui *r_edges;
-    ui *pend;
+//    ui *pend;
+    void deleteEdge(int edgeNo, int u, int v);
+    ui edge_rewire(ui u, const ui *pend, ui v, ui w);
+    void shrink(ui u, ui &end);
+    void addDominated(ui u, ui v = -1);
+    void update_triangle(ui u1, ui u2);
+    int delete_vertex_dominate(ui u);
+    int compute_triangle_counts();
 public:
     void init();
-    void inexact_delete();
+//    void inexact_delete();
     int pay();
-    void last_delete();
-    void appending_action();
-    void debugCheck();
-    bool canSafeReduction();
-    bool canRiskReduction();
-    void riskReduction();
-    bool isDone();
-    void localSearch();
+    void safe_reduction();
     ProbabilityPayAndTry(ui _n, ui _m, ui *_given_set, ui _gs_length,
                          ui *_pstart, ui *_edges, ui _k):
                          NearLinearPayAndTry(_n, _m, _given_set, _gs_length, _pstart, _edges, _k){
+        edgeDeleteIndex = NULL;
         // I might should put the initialization of edgeDeleteIndex in the `init' method
     }
 };

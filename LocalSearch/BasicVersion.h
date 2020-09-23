@@ -10,7 +10,6 @@
 #include <time.h>
 #include <cstdlib>
 
-
 extern char LOG_PATH[];
 extern bool LOG_FLAG;
 class BasicVersion {
@@ -23,11 +22,11 @@ protected:
     ui gs_length;
     ui *pstart;
     ui *edges;
-    ui total_k;
+    int total_k;
     char* currentSolution;
     std::list<int> history;
     int cSize;
-    ui c_k;
+    int c_k;
     char* optimumSolution;
     int oSize;
     NodeList *pool;

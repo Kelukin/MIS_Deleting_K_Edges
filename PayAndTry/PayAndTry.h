@@ -17,6 +17,8 @@ protected:
     ui gs_length;
     ui *pstart;
     ui *edges;
+    ui *pstart_copy;
+    ui *edges_copy;
     ui k;
     ui ori_k;
     char *is;
@@ -39,10 +41,15 @@ public:
     virtual void riskReduction();
     virtual bool isDone() = 0; // it means all vertices' status have been certain.
     virtual void localSearch();
+    int getMISSize();
     PayAndTry(ui _n, ui _m, ui *_given_set, ui _gs_length, ui *_pstart, ui *_edges, ui _k):
             n(_n), m(_m), given_set(_given_set), gs_length(_gs_length), pstart(_pstart),
             edges(_edges), k(_k)
             {
+                pstart_copy = new ui[n];
+                edges_copy = new ui[m];
+                memcpy(pstart_copy, pstart, sizeof(ui) * n);
+                memcpy(edges_copy, edges, sizeof(ui) * m);
                 is = new char[n];
                 for(ui i = 0; i < n; ++i)   is[i] = 1;
                 degree = new int[n];
@@ -58,8 +65,9 @@ public:
     virtual ~PayAndTry(){
         delete[] is;
         delete[] degree;
+        delete[] pstart_copy;
+        delete[] edges_copy;
     }
-    int getMISSize();
 };
 
 

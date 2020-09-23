@@ -408,7 +408,7 @@ void check_is(const char *is, int count, ui n, int k, ui *pstart, ui *edges){
     assert((cnt & 1) == 0);
     cnt >>= 1;
     if(cnt > k) printf("WA!!!!!!! Delete more than k edges!!! %d", cnt);
-    printf("residual k: %d, assumed %d\n", k - cnt, count);
+//    printf("residual k: %d, assumed %d\n", k - cnt, count);
     assert(count == k - cnt);
     assert(cnt <=k);
 }
@@ -1554,14 +1554,14 @@ void Graph::near_maximum_near_linear(ui k) {
 void Graph::pay_and_try_dominate_max_degree_greedy_delete_edges(ui k) {
     PayAndTry* payAndTry = new NearLinearPayAndTry(n, m, given_set, gs_length,
             pstart, edges, k);
-
+//    PayAndTry* payAndTry = new ProbabilityPayAndTry(n, m, given_set, gs_length, pstart, edges, k);
 //    PayAndTry* payAndTry = new RiskPayAndTry(n, m, given_set, gs_length
 //            , pstart, edges, k);
 #ifdef __LINUX__
     struct timeval start, endl, end;
     gettimeofday(&start, NULL);
 #endif
-    payAndTry->init();
+//    payAndTry->init();
     int res = pay_and_try_framework(payAndTry);
     printf("The MIS size get by PayAndTry-dominate_max_degree_greedy after deleting %d edges is %d\n",
             k, res);
@@ -1576,6 +1576,7 @@ void Graph::pay_and_try_dominate_max_degree_greedy_delete_edges(ui k) {
 #endif
     if(LOCALSEARCH)
         payAndTry->localSearch();
+    res = payAndTry->getMISSize();
     assert(payAndTry->check_result(res, k));
     delete payAndTry;
 }

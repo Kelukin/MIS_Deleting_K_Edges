@@ -5,7 +5,7 @@
 #ifndef MIS_DELETING_K_EDGES_PROBABILITYDELETEINDEX_H
 #define MIS_DELETING_K_EDGES_PROBABILITYDELETEINDEX_H
 
-#include "EdgeDeleteIndex.h"
+#include "BaseEdgeIndex.h"
 #include "../Utility.h"
 #include <unordered_map>
 #include <queue>
@@ -19,7 +19,7 @@ struct EdgeCnt{
         return cnt < ano.cnt;
     }
 };
-class ProbabilityDeleteIndex : public EdgeDeleteIndex {
+class ProbabilityDeleteIndex : public BaseEdgeIndex {
 protected:
     unsigned long long edge2Ull(ui x, ui y){
         return ((unsigned long long)x << 32) | y;
@@ -29,10 +29,11 @@ protected:
     std::priority_queue<EdgeCnt> qu;
 public:
     ProbabilityDeleteIndex(ui n, ui m, int max_d, ui* edges, char* _is, ui* r_edges, ui *pstart, ui *pend, int const *_degree):
-            EdgeDeleteIndex(n, m, max_d, edges, _is, r_edges, pstart, pend, _degree){
+            BaseEdgeIndex(n, m, max_d, edges, _is, r_edges, pstart, pend, _degree){
         calProbability();
     }
     std::pair<ui, ui> recommendEdge();
+    bool empty();
 };
 
 

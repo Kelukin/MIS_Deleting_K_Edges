@@ -7,7 +7,7 @@
 
 
 void  PayAndTry::localSearch() {
-    BasicVersion localSearch(n, m, given_set, gs_length, pstart, edges, ori_k, is);
+    BasicVersion localSearch(n, m, given_set, gs_length, pstart_copy, edges_copy, ori_k, is);
     localSearch.iterate_local_search();
 
 }

@@ -10,6 +10,7 @@
 #include "PayAndTry/NearLinearPayAndTry.h"
 #include "PayAndTry/RiskPayAndTry.h"
 #include "ExactSolver.h"
+#include "PayAndTry/ProbabilityPayAndTry.h"
 extern  bool LOCALSEARCH;
 extern bool LOG_USE;
 void check_is(const char *is, int count, ui n, int k, ui *pstart, ui *edges);

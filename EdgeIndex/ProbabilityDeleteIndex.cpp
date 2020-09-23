@@ -18,19 +18,22 @@ void ProbabilityDeleteIndex::calProbability() {
         qu.push(EdgeCnt(it->first, it->second));
     }
 
+    fclose(fp);
+    printf("The log read for estimating probability has been finished!\n");
 }
 
 std::pair<ui, ui> ProbabilityDeleteIndex::recommendEdge() {
-    if(qu.empty())  return std::make_pair(-1, -1);
-    else{
-        auto p = qu.top();
-        auto hashValue = p.edgeHash;
+    auto p = qu.top();
+    auto hashValue = p.edgeHash;
 
-        //decode
+    //decode
 
-        ui x = hashValue >> 32;
-        ui y = (hashValue << 32) >> 32;
-        qu.pop();
-        return std::make_pair(x, y);
-    }
+    ui x = hashValue >> 32;
+    ui y = (hashValue << 32) >> 32;
+    qu.pop();
+    return std::make_pair(x, y);
+}
+
+bool ProbabilityDeleteIndex::empty() {
+    return qu.empty();
 }

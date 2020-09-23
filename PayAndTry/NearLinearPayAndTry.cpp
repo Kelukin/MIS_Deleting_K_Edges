@@ -9,7 +9,6 @@ void NearLinearPayAndTry::localSearch() {
     localSearch.iterate_local_search();
     const char *ret = localSearch.getOptimum();
     memcpy(is, ret, sizeof(char) * n);
-
 }
 bool NearLinearPayAndTry::check_result(ui mis_size, ui ori_k) {
 #ifndef NDEBUG
@@ -25,6 +24,7 @@ bool NearLinearPayAndTry::check_result(ui mis_size, ui ori_k) {
         }
     conflict_cnt/=2;
     printf("original k: %d, the fact conflict edges: %d\n", ori_k, conflict_cnt);
+    printf("mis : %d %d\n", mis_size, mis_cnt);
     return mis_size == mis_cnt && ori_k >= conflict_cnt;
 #endif
     return true;

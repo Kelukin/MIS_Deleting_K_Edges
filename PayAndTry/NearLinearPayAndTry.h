@@ -32,17 +32,18 @@ protected:
     int delete_vertex(ui v, char *is, int *degree
             , std::vector<ui> &degree_ones, std::vector<ui> &degree_twos);
     virtual int delete_vertex_dominate(ui u);
-    int compute_triangle_counts();
-    void update_triangle(ui u1, ui u2);
+    virtual int compute_triangle_counts();
+    virtual void update_triangle(ui u1, ui u2);
     int lp_reduction(const ui *ids, ui ids_n);
-    void shrink(ui u, ui &end);
+    virtual void shrink(ui u, ui &end);
     virtual void update_max_d();
     bool dominated_check(ui u);
     void edge_rewire(ui u, ui u1, ui u2);
     void clear_S();
-    ui edge_rewire(ui u, const ui *pend, ui v, ui w);
+    virtual ui edge_rewire(ui u, const ui *pend, ui v, ui w);
     bool exist_edge(ui u1, ui u2) override ;
     ui get_other_neighbor(ui u, ui u1);
+    virtual void deleteEdge(int edgeNo, int u, int v);
 
     virtual void addDominated(ui u, ui v = -1);//u dominate v and u should be reducted
 
@@ -79,21 +80,20 @@ public:
         fixed = nullptr;
         reverseEdge = nullptr;
     }
-    virtual void init() override;
+    void init() override;
     void inexact_delete() override ;
     int pay() override ;
     void last_delete() override;
     void localSearch() override;
-    virtual void safe_reduction() override ;
-    virtual bool canSafeReduction() override ;
+    void safe_reduction() override ;
+    bool canSafeReduction() override ;
     bool isDone() override ;
     void appending_action() override ;
     bool check_result(ui mis_size, ui ori_k);
-    void deleteEdge(int edgeNo, int u, int v);
     void debugCheck() override ;
-    virtual  bool canRiskReduction() override;
-    virtual void riskReduction() override ;
-    virtual ~NearLinearPayAndTry() override{
+    bool canRiskReduction() override;
+    void riskReduction() override ;
+    ~NearLinearPayAndTry() override{
         delete[] adj;
         delete[] dominate;
         delete[] pend;
