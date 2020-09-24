@@ -265,7 +265,7 @@ bool BasicVersion::accept(int tmpSize, int res_k) {
         if(!outputtedFlag){
             outputtedFlag = true;
 //            printf("cSize %d\n", cSize);
-            if(cSize > 440)
+//            if(cSize > 440)
                 outputLogConflictEdges();
         }
     }
