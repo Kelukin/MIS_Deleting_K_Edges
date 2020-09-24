@@ -38,8 +38,6 @@ void BasicVersion::outputLogConflictEdges() {
             for(int j = pstart[i]; j < pstart[i + 1]; ++j){
                 ui x = edges[j];
                 if(currentSolution[x] && x < i){
-                    if(x == 3208 && i ==3422)
-                        printf("%d %d %d", x, i, j);
                     fprintf(fp, "%d %d\n", x, i);
                 }
             }
@@ -266,8 +264,9 @@ bool BasicVersion::accept(int tmpSize, int res_k) {
     if(rejectCnt > std::min(cSize, 500)){
         if(!outputtedFlag){
             outputtedFlag = true;
-            printf("cSize %d\n", cSize);
-            outputLogConflictEdges();
+//            printf("cSize %d\n", cSize);
+            if(cSize > 440)
+                outputLogConflictEdges();
         }
     }
     if(rejectCnt > cSize){

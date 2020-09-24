@@ -8,8 +8,9 @@ int THRESHOLD = 20;
 int TIME_THRESHOLD = 500;
 bool LOCALSEARCH = true;
 char LOG_PATH[] = "./log.txt";
-bool LOG_FLAG = true;
+bool LOG_FLAG = false;
 bool LOG_USE = false;
+bool Train_Flag = false;
 FILE *open_file(const char *filename, const char *mode){
     FILE *f = fopen(filename, mode);
     if(f == NULL){

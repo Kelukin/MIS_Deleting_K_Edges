@@ -107,7 +107,7 @@ int Graph::init_given_set(char *is, int *degree) {
 
     return cost;
 }
-
+extern bool Train_Flag;
 void Graph::read_graph() {
     std::cout<< dir << std::endl;
     FILE *f = open_file((dir + std::string("_degree.bin")).c_str(), "rb");
@@ -146,16 +146,20 @@ void Graph::read_graph() {
         pstart[i + 1] = pstart[i] + degree[i];
     }
     fclose(f);
-
-    gs_length = 0;
-//    f = open_file((dir + std::string("_given_set.bin")).c_str(), "rb");
-//    if(f != NULL){
-//        fread(&gs_length, sizeof(int), 1, f);
-//        given_set = new ui[gs_length];
-//        fread(given_set, sizeof(int), gs_length, f);
-//    } else{
-//        gs_length = 0;
-//    }
+    if(Train_Flag){
+        gs_length = 0;
+        printf("Open the train mode.\n");
+    }
+    else{
+        f = open_file((dir + std::string("_given_set.bin")).c_str(), "rb");
+        if(f != NULL){
+            fread(&gs_length, sizeof(int), 1, f);
+            given_set = new ui[gs_length];
+            fread(given_set, sizeof(int), gs_length, f);
+        } else{
+            gs_length = 0;
+        }
+    }
 
     delete[] buf;
 
@@ -1527,6 +1531,16 @@ void Graph::near_maximum_near_linear(ui k) {
 //    compute_upperbound(is, fixed);
     check_is(is, res, origin_k);
 #endif
+#ifdef __LINUX__
+    gettimeofday(&end, NULL);
+
+    long long mtime, seconds, useconds;
+    seconds = end.tv_sec - start.tv_sec;
+    useconds = end.tv_usec - start.tv_usec;
+    mtime = seconds*1000000 + useconds;
+
+    printf("Process time: %lld, Swap time: %lld, Total time: %lld\n", mtime1, mtime-mtime1, mtime);
+#endif
     if(LOCALSEARCH){
         BasicVersion localSearch(n, m, given_set, gs_length, pstart, edges, origin_k, is);
         localSearch.iterate_local_search();
@@ -1539,22 +1553,14 @@ void Graph::near_maximum_near_linear(ui k) {
     delete[] is;
     delete[] fixed;
 
-#ifdef __LINUX__
-    gettimeofday(&end, NULL);
-
-	long long mtime, seconds, useconds;
-	seconds = end.tv_sec - start.tv_sec;
-	useconds = end.tv_usec - start.tv_usec;
-	mtime = seconds*1000000 + useconds;
-
-	printf("Process time: %lld, Swap time: %lld, Total time: %lld\n", mtime1, mtime-mtime1, mtime);
-#endif
 }
-
+extern int INDEX_TYPE;
 void Graph::pay_and_try_dominate_max_degree_greedy_delete_edges(ui k) {
-    PayAndTry* payAndTry = new NearLinearPayAndTry(n, m, given_set, gs_length,
-            pstart, edges, k);
-//    PayAndTry* payAndTry = new ProbabilityPayAndTry(n, m, given_set, gs_length, pstart, edges, k);
+
+    PayAndTry* payAndTry = (INDEX_TYPE < 2)?
+            new NearLinearPayAndTry(n, m, given_set, gs_length,pstart, edges, k)
+            :
+            new ProbabilityPayAndTry(n, m, given_set, gs_length, pstart, edges, k);
 //    PayAndTry* payAndTry = new RiskPayAndTry(n, m, given_set, gs_length
 //            , pstart, edges, k);
 #ifdef __LINUX__

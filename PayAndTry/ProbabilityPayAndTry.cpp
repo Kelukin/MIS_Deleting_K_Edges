@@ -245,7 +245,7 @@ int ProbabilityPayAndTry::pay() {
             }
         if(flag){
             k -= 1;
-            printf("K : %d\n", k);
+//            printf("K : %d\n", k);
             return 0;
         }
     }
