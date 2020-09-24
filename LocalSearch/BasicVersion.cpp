@@ -132,7 +132,7 @@ void BasicVersion::iterate_local_search() {
 #ifndef NDEBUG
             check_is(currentSolution, c_k, n, total_k, pstart, edges);
 #endif
-        }else{
+        }else{ 
             memcpy(pool, tmpPool, sizeof(NodeList) * n);
             for(auto &x:inArea){
                 history.push_back(x);
