@@ -3,14 +3,14 @@
 void print_usage(){
     printf("Usage: [1]exe [2]alg [3]graph-dir [4]deleteNumber \n ");
 //    printf("[5]indexType  [6]lastDeleteType [7]indexThreshold\n");
-    printf("[5]TrainFlag [6]indexType\n");
+    printf("[5]TrainFlag [6]indexType [7]timeThreshold\n");
     printf("\talg: greedy, NearLinear, PayAndTry, exact\n");
     printf("\tindexType: 0-GreedyIndex, 1-ProfitPriority, 2-Edge Estimation\n");
 //    printf("\tlastDeleteType: 0-basic, 1-smart");
 }
 extern int INDEX_TYPE;
 extern int LAST_DELETE_TYPE;
-extern int THRESHOLD;
+extern int TIME_THRESHOLD;
 extern char LOG_PATH[];
 extern bool Train_Flag; // in the train mode, we assumed the query set to be set
 extern bool LOG_FLAG;
@@ -20,6 +20,7 @@ int main(int argc, char *argv[]) {
         return 0;
     }
     if(argc >= 6)   INDEX_TYPE = atoi(argv[5]);
+    if(argc >= 7)   TIME_THRESHOLD = atoi(argv[6]);
     if(argc >= 5){
         int tmp = atoi(argv[4]);
         if(tmp == 1){
