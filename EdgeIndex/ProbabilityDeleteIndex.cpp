@@ -3,7 +3,7 @@
 //
 
 #include "ProbabilityDeleteIndex.h"
-extern  long long BUILT_LOG_TIME;
+extern  long long BUILT_INDEX_TIME;
 void ProbabilityDeleteIndex::calProbability() {
 #ifdef __LINUX__
     struct timeval start, end;
@@ -29,11 +29,11 @@ void ProbabilityDeleteIndex::calProbability() {
     long long  seconds, useconds;
     seconds = end.tv_sec - start.tv_sec;
     useconds = end.tv_usec - start.tv_usec;
-    BUILT_LOG_TIME = seconds * 1000000 + useconds;
+    BUILT_INDEX_TIME = seconds * 1000000 + useconds;
 #endif
 
     printf("The log read for estimating probability has been finished!\n");
-}dddsdd
+}
 
 std::pair<ui, ui> ProbabilityDeleteIndex::recommendEdge() {
     auto p = qu.top();
