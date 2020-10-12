@@ -1557,6 +1557,7 @@ void Graph::near_maximum_near_linear(ui k) {
 
 }
 extern int INDEX_TYPE;
+extern long long BUILT_INDEX_TIME;
 void Graph::pay_and_try_dominate_max_degree_greedy_delete_edges(ui k) {
 
     PayAndTry* payAndTry = (INDEX_TYPE < 2)?
@@ -1580,7 +1581,7 @@ void Graph::pay_and_try_dominate_max_degree_greedy_delete_edges(ui k) {
     useconds = end.tv_usec - start.tv_usec;
     mtime = seconds * 1000000 + useconds;
 
-    printf("Process time: %lld\n",mtime);
+    printf("Process time: %lld\n",mtime - BUILT_INDEX_TIME);
 #endif
     if(LOCALSEARCH)
         payAndTry->localSearch();

@@ -3,7 +3,12 @@
 //
 
 #include "ProbabilityDeleteIndex.h"
+extern  long long BUILT_LOG_TIME;
 void ProbabilityDeleteIndex::calProbability() {
+#ifdef __LINUX__
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+#endif
     FILE *fp = fopen(LOG_PATH, "r");
     int x, y;
     while(fscanf(fp, "%d%d", &x, &y) != EOF){
@@ -19,8 +24,16 @@ void ProbabilityDeleteIndex::calProbability() {
     }
 
     fclose(fp);
+#ifdef __LINUX__
+    gettimeofday(&end, NULL);
+    long long  seconds, useconds;
+    seconds = end.tv_sec - start.tv_sec;
+    useconds = end.tv_usec - start.tv_usec;
+    BUILT_LOG_TIME = seconds * 1000000 + useconds;
+#endif
+
     printf("The log read for estimating probability has been finished!\n");
-}
+}dddsdd
 
 std::pair<ui, ui> ProbabilityDeleteIndex::recommendEdge() {
     auto p = qu.top();
