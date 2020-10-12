@@ -11,6 +11,7 @@ char LOG_PATH[] = "./log.txt";
 bool LOG_FLAG = false;
 bool LOG_USE = false;
 bool Train_Flag = false;
+int QUERY_ID = -1;
 FILE *open_file(const char *filename, const char *mode){
     FILE *f = fopen(filename, mode);
     if(f == NULL){

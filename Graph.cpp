@@ -108,6 +108,7 @@ int Graph::init_given_set(char *is, int *degree) {
     return cost;
 }
 extern bool Train_Flag;
+extern int QUERY_ID;
 void Graph::read_graph() {
     std::cout<< dir << std::endl;
     FILE *f = open_file((dir + std::string("_degree.bin")).c_str(), "rb");
@@ -151,7 +152,9 @@ void Graph::read_graph() {
         printf("Open the train mode.\n");
     }
     else{
-        f = open_file((dir + std::string("_given_set.bin")).c_str(), "rb");
+        std::string id_str = (QUERY_ID == -1)? "" : std::to_string(QUERY_ID);
+        f = open_file((dir + std::string("_given_set") + id_str
+                + std::string(".bin")).c_str(), "rb");
         if(f != NULL){
             fread(&gs_length, sizeof(int), 1, f);
             given_set = new ui[gs_length];
@@ -165,7 +168,6 @@ void Graph::read_graph() {
 
     delete[] degree;
 }
-
 void Graph::get_two_neighbors(ui u, char *is, ui &u1, ui &u2) {
     for(ui i = pstart[u];i < pstart[u+1];i ++) if(is[edges[i]]) {
         if(u1 == n) {
