@@ -272,8 +272,8 @@ bool BasicVersion::accept(int tmpSize, int res_k) {
     if(rejectCnt > cSize){
         long long base = 1 + 1LL *(cSize - tmpSize) * (oSize - tmpSize);
         if( (rand() % base) == 1) {
-
-        }return  true;
+            return true;
+        }
     }
     ++rejectCnt;
     return false;
