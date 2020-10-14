@@ -3,16 +3,19 @@
 //
 #include "Utility.h"
 int INDEX_TYPE = 1;
+std::vector<int> CANDIDATE_EDGES_NUMBER;
 int LAST_DELETE_TYPE = 1;
 int THRESHOLD = 20;
 int TIME_THRESHOLD = 30;
 bool LOCALSEARCH = true;
-char LOG_PATH[] = "./log.txt";
+std::string LOG_PATH = "./log.txt";
 bool LOG_FLAG = false;
 bool LOG_USE = false;
+int EDGE_NUMBER_CONSTRAINT;
 bool Train_Flag = false;
 int QUERY_ID = -1;
 long long BUILT_INDEX_TIME = 0;
+bool AUTO_LOG = false;
 FILE *open_file(const char *filename, const char *mode){
     FILE *f = fopen(filename, mode);
     if(f == NULL){
@@ -83,7 +86,7 @@ std::vector<double> getLogProbability(int vertexNum){
     std::vector<double> ret(vertexNum, -1);
     std::vector<int> cnt(vertexNum, 0);
     std::vector<int> pos(vertexNum, 0);
-    FILE  *fp = fopen(LOG_PATH, "r");
+    FILE  *fp = fopen(LOG_PATH.c_str(), "r");
     int oldValue, newValue;
     while(fscanf(fp, "%d%d", &oldValue, &newValue) != EOF){
         int num;

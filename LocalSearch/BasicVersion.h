@@ -10,7 +10,7 @@
 #include <time.h>
 #include <cstdlib>
 
-extern char LOG_PATH[];
+extern std::string LOG_PATH;
 extern bool LOG_FLAG;
 class BasicVersion {
 protected:

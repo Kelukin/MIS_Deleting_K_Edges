@@ -13,6 +13,7 @@
 #include <cassert>
 #include <queue>
 #include <iostream>
+#include <unordered_set>
 typedef unsigned int ui;
 struct NodeList{
     NodeList* nxt;

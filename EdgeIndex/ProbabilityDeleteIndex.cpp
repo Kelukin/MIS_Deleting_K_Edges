@@ -9,7 +9,7 @@ void ProbabilityDeleteIndex::calProbability() {
     struct timeval start, end;
     gettimeofday(&start, NULL);
 #endif
-    FILE *fp = fopen(LOG_PATH, "r");
+    FILE *fp = fopen(LOG_PATH.c_str(), "r");
     int x, y;
     while(fscanf(fp, "%d%d", &x, &y) != EOF){
         unsigned long long hash = edge2Ull(x, y);

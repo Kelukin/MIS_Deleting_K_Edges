@@ -48,6 +48,7 @@ private:
     int pay_and_try_framework(PayAndTry* payAndTry);
     int init_given_set(char *is, int* degree);
     void recover_given_set(char *is);
+    void set_log();
 public:
     Graph(const char *_dir);
     ~Graph();

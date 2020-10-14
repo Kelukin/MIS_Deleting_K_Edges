@@ -9,7 +9,7 @@
 #include "../Utility.h"
 #include <unordered_map>
 #include <queue>
-extern char LOG_PATH[];
+extern std::string LOG_PATH;
 typedef std::pair<unsigned long long, int> edge_cnt;
 struct EdgeCnt{
     unsigned long long edgeHash;

@@ -109,6 +109,8 @@ int Graph::init_given_set(char *is, int *degree) {
 }
 extern bool Train_Flag;
 extern int QUERY_ID;
+extern int EDGE_NUMBER_CONSTRAINT;
+extern std::vector<int> CANDIDATE_EDGES_NUMBER;
 void Graph::read_graph() {
     std::cout<< dir << std::endl;
     FILE *f = open_file((dir + std::string("_degree.bin")).c_str(), "rb");
@@ -131,7 +133,7 @@ void Graph::read_graph() {
     f = open_file((dir  + std::string("_adj.bin")).c_str(), "rb");
     if(pstart == NULL)  pstart = new ui[n+1];
     if(edges == NULL)   edges = new ui[m];
-
+    CANDIDATE_EDGES_NUMBER = {300, 500, 1000, 3000, 5000};
     ui *buf = new ui[n];
 
     pstart[0] = 0;
@@ -148,7 +150,20 @@ void Graph::read_graph() {
     }
     fclose(f);
     if(Train_Flag){
-        gs_length = 0;
+        if(QUERY_ID == -1){
+            gs_length = 0;
+        }else{
+            std::string trainFile = dir + "_trainset_" \
+            + std::to_string(QUERY_ID) +".bin";
+            f = open_file(trainFile.c_str(), "rb");
+            if(f != NULL){
+                fread(&gs_length, sizeof(int), 1, f);
+                given_set = new ui[gs_length];
+                fread(given_set, sizeof(int), gs_length, f);
+            } else{
+                gs_length = 0;
+            }
+        }
         printf("Open the train mode.\n");
     }
     else{
@@ -1557,13 +1572,59 @@ void Graph::near_maximum_near_linear(ui k) {
 
 }
 extern int INDEX_TYPE;
+
+extern bool AUTO_LOG;
 extern long long BUILT_INDEX_TIME;
+extern std::string LOG_PATH;
+void Graph::set_log(){
+    int default_K = 5000;
+    int default_dis = gs_length + std::abs(default_K - EDGE_NUMBER_CONSTRAINT);
+    int dataset_number;
+    for(int i = 0; i < dataset_number; ++i){
+        std::string trainFile = dir + "_trainset_" \
+            + std::to_string(i) +".bin";
+        FILE* f = open_file(trainFile.c_str(), "rb");
+        if(f == NULL)   continue;
+        std::vector<ui> tmpGivenSet;
+        int sz;
+        fread(&sz, sizeof(int), 1, f);
+        for(int j = 0; j < sz; ++j){
+            int x;
+            fread(&x, sizeof(int), 1, f);
+            tmpGivenSet.push_back(x);
+        }
+
+        std::unordered_set<int> visited_x;
+        std::unordered_set<int> visited_y;
+        visited_x.clear();
+        visited_y.clear();
+        int current_dis = 0;
+        for(int j = 0; j < gs_length; ++j)  visited_x.insert(given_set[j]);
+        for(int x:tmpGivenSet)  {
+            if(visited_x.find(x) == visited_x.end())    ++current_dis;
+            visited_y.insert(x);
+        }
+
+        for(int j = 0; j < gs_length; ++j)
+            if(visited_y.find(given_set[j]) == visited_y.end())
+                ++current_dis;
+
+        for(auto constraint: CANDIDATE_EDGES_NUMBER){
+            if(abs(constraint - EDGE_NUMBER_CONSTRAINT) + current_dis < default_dis){
+                default_dis = abs(constraint - EDGE_NUMBER_CONSTRAINT) + current_dis;
+                LOG_PATH = dir + "_" + std::to_string(i) + "_" + std::to_string(constraint) + ".log";
+            }
+        }
+    }
+
+}
 void Graph::pay_and_try_dominate_max_degree_greedy_delete_edges(ui k) {
 
     PayAndTry* payAndTry = (INDEX_TYPE < 2)?
             new NearLinearPayAndTry(n, m, given_set, gs_length,pstart, edges, k)
             :
             new ProbabilityPayAndTry(n, m, given_set, gs_length, pstart, edges, k);
+    if(INDEX_TYPE == 2 && AUTO_LOG) set_log();
 //    PayAndTry* payAndTry = new RiskPayAndTry(n, m, given_set, gs_length
 //            , pstart, edges, k);
 #ifdef __LINUX__

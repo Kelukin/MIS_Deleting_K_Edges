@@ -31,7 +31,7 @@ void BasicVersion::perturbation(char *is, int &res_k, std::vector<int>& inArea, 
 void BasicVersion::outputLogConflictEdges() {
     if(!LOG_FLAG)   return;
     if(fp == NULL){
-        fp = fopen(LOG_PATH, "w");
+        fp = fopen(LOG_PATH.c_str(), "w");
     }
     for(int i = 0; i < n; ++i)
         if(currentSolution[i]){
@@ -47,7 +47,7 @@ void BasicVersion::outputLogConflictEdges() {
 void BasicVersion::outputLog(std::vector<int> &inArea, std::vector<int>& outArea, int old_size, int new_size) {
     if(!LOG_FLAG)   return;
     if(fp == NULL){
-        fp = fopen(LOG_PATH, "w");
+        fp = fopen(LOG_PATH.c_str(), "w");
     }
 
 //    printf("write\n");
