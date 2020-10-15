@@ -133,7 +133,7 @@ void BasicVersion::iterate_local_search() {
 #ifndef NDEBUG
             check_is(currentSolution, c_k, n, total_k, pstart, edges);
 #endif
-        }else{ 
+        }else{
             memcpy(pool, tmpPool, sizeof(NodeList) * n);
             for(auto &x:inArea){
                 history.push_back(x);
@@ -199,9 +199,9 @@ void BasicVersion::localSearch(char *is, int& tmpSize, int &res_k, NodeList* poo
 //    printf("Mid Check OK!\n");
 #endif
     while(ub_in > lb_out || lb_out <=res_k){
-        while(outList[lb_out] == NULL && lb_out < n) ++lb_out;
+        while(outList[lb_out] == NULL && lb_out < maxd) ++lb_out;
         while(inList[ub_in] == NULL && ub_in > 0) ub_in--;
-        if(lb_out == n) break;
+        if(lb_out == maxd) break;
 //        if(lb_out > res_k && ub_in <= lb_out)  continue;
 
         // we may add the module of (1,2)swap
