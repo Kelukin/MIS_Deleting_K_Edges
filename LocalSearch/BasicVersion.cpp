@@ -256,26 +256,33 @@ void BasicVersion::localSearch(char *is, int& tmpSize, int &res_k, NodeList* poo
 bool BasicVersion::accept(int tmpSize, int res_k) {
     static int rejectCnt = 0;
     static bool outputtedFlag = false;
+//    std::cout<<tmpSize<<" "<<cSize<< " "<< rejectCnt<<std::endl;
     if(res_k < 0) return false;
     if(tmpSize >= cSize){
-        rejectCnt = 0;
+        fromWorseFlag = false;
+        if(tmpSize > cSize)
+            rejectCnt = 0;
         outputtedFlag = false;
         return true;
+    }else if (!fromWorseFlag){
+        fromWorseFlag = true;
+        return true;
     }
-    if(rejectCnt > std::min(cSize, 500)){
+    if(rejectCnt > std::min(cSize, 200)){
         trapFlag = true;
         if(!outputtedFlag){
             outputtedFlag = true;
-//            printf("cSize %d\n", cSize);
-//            if(cSize > 440)
                 outputLogConflictEdges();
         }
     }
     if(rejectCnt > cSize){
         trapFlag = true;
         long long base = 1 + 1LL *(cSize - tmpSize) * (oSize - tmpSize);
-        if( (rand() % base) == 1) {
+//        std::cout<<base<<std::endl;
+        if( (rand() % base) == 0) {
             trapFlag = false;
+            fromWorseFlag = true;
+            rejectCnt = 0;
             return true;
         }
     }
