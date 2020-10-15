@@ -259,7 +259,8 @@ bool BasicVersion::accept(int tmpSize, int res_k) {
 //    std::cout<<tmpSize<<" "<<cSize<< " "<< rejectCnt<<std::endl;
     if(res_k < 0) return false;
     if(tmpSize >= cSize){
-        fromWorseFlag = false;
+        if(tmpSize >= oSize)
+            fromWorseFlag = false;
         if(tmpSize > cSize)
             rejectCnt = 0;
         outputtedFlag = false;
