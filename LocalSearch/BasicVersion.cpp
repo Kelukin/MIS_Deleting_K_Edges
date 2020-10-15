@@ -257,7 +257,7 @@ bool BasicVersion::accept(int tmpSize, int res_k) {
     static int rejectCnt = 0;
     static bool outputtedFlag = false;
     if(res_k < 0) return false;
-    if(tmpSize > cSize){
+    if(tmpSize >= cSize){
         rejectCnt = 0;
         outputtedFlag = false;
         return true;
