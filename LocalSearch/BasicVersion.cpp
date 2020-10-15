@@ -22,7 +22,8 @@ void BasicVersion::perturbation(char *is, int &res_k, std::vector<int>& inArea, 
                 canFinish = true;
             }
             if(canFinish){
-                if(rand() & 1)  break;
+                if(trapFlag && ( rand() % 3 ) == 0)   break;
+                else if(!trapFlag && ( rand() % 1 ) == 0) break;
             }
         }
         it = tmpIt;
@@ -262,6 +263,7 @@ bool BasicVersion::accept(int tmpSize, int res_k) {
         return true;
     }
     if(rejectCnt > std::min(cSize, 500)){
+        trapFlag = true;
         if(!outputtedFlag){
             outputtedFlag = true;
 //            printf("cSize %d\n", cSize);
@@ -270,8 +272,10 @@ bool BasicVersion::accept(int tmpSize, int res_k) {
         }
     }
     if(rejectCnt > cSize){
+        trapFlag = true;
         long long base = 1 + 1LL *(cSize - tmpSize) * (oSize - tmpSize);
         if( (rand() % base) == 1) {
+            trapFlag = false;
             return true;
         }
     }

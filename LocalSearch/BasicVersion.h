@@ -28,6 +28,7 @@ protected:
     int cSize;
     int c_k;
     char* optimumSolution;
+    bool trapFlag;
     int oSize;
     NodeList *pool;
     NodeList **inQDegreeHead;
@@ -41,6 +42,7 @@ public:
             , ui _gs_length, ui* _pstart, ui* _edges, ui _k, char* is): n(_n), m(_m)
             , given_set(_give_set), gs_length(_gs_length), pstart(_pstart),
             edges(_edges), total_k(_k){
+        trapFlag = false;
         fp = NULL;
         srand(time(NULL));
         maxd = 0;
