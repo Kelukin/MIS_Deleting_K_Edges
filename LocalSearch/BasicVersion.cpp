@@ -258,15 +258,9 @@ bool BasicVersion::accept(int tmpSize, int res_k) {
     static bool outputtedFlag = false;
 //    std::cout<<tmpSize<<" "<<cSize<< " "<< rejectCnt<<std::endl;
     if(res_k < 0) return false;
-    if(tmpSize >= cSize){
-        if(tmpSize >= oSize)
-            fromWorseFlag = false;
-        if(tmpSize > cSize)
-            rejectCnt = 0;
+    if(tmpSize > cSize){
+        trapFlag = false;
         outputtedFlag = false;
-        return true;
-    }else if (!fromWorseFlag){
-        fromWorseFlag = true;
         return true;
     }
     if(rejectCnt > std::min(cSize, 200)){
@@ -281,8 +275,7 @@ bool BasicVersion::accept(int tmpSize, int res_k) {
         long long base = 1 + 1LL *(cSize - tmpSize) * (oSize - tmpSize);
 //        std::cout<<base<<std::endl;
         if( (rand() % base) == 0) {
-            trapFlag = false;
-            fromWorseFlag = true;
+//            trapFlag = false;
             rejectCnt = 0;
             return true;
         }
