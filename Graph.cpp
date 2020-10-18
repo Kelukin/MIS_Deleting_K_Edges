@@ -153,9 +153,11 @@ void Graph::read_graph() {
         if(QUERY_ID == -1){
             gs_length = 0;
         }else{
-            std::string trainFile = dir + "_trainset_" \
-            + std::to_string(QUERY_ID) +".bin";
-            f = open_file(trainFile.c_str(), "rb");
+            f = open_file((dir + std::string("_given_set") +
+                            std::string(".bin")).c_str(), "rb");
+//            std::string trainFile = dir + "_trainset_" \
+//            + std::to_string(QUERY_ID) +".bin";
+//            f = open_file(trainFile.c_str(), "rb");
             if(f != NULL){
                 fread(&gs_length, sizeof(int), 1, f);
                 given_set = new ui[gs_length];
