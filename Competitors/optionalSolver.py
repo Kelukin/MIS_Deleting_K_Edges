@@ -1,4 +1,5 @@
 from copy import Error
+from heapq import heappop, heappush
 import networkx as nx
 import sys
 from networkx import exception
@@ -18,10 +19,10 @@ def readGraph(filePath):
         m = readFromFile(f)
         for i in range(n):
             degree.append(readFromFile(f))
-    with open(filePath + '_adj.bin', 'rb'):
+    with open(filePath + '_adj.bin', 'rb') as f:
         for i in range(n):
             for j in range(degree[i]):
-                tmp = readFromFile(filePath)
+                tmp = readFromFile(f)
                 G.add_edge(i, tmp)
     return G
 
@@ -47,22 +48,44 @@ def get_is(G, gs_set, k):
         raise Exception('The the number of K is too small!')
 
     for x in gs_set:
-        neighbors = G.neighbors(x)
+        neighbors = list(G.neighbors(x))
         for y in neighbors:
             if G.has_node(y):
                 G.remove_node(y)
     return approximation.maximum_independent_set(G), k - cnt
 
-def greedyExpansion(G, is, k):
-    ret = is[:]
+def greedyExpansion(G, ss, k):
     h = []
-    is = set(is)
+    ss = set(ss)
     degree = [0 for i in range(G.order())]
-    for x in ret:
+    for x in ss:
         for y in G.neighbors(x):
             degree[y] += 1
-             
-    return ret
+    
+    for i in range(G.order()):
+        if i not in ss:
+            heappush(h, (degree[i], i))
+
+    while h != []:
+        tmp = heappop(h)
+        if tmp[0] > k:
+            break
+        elif degree[tmp[1]] != tmp[0]:
+            continue
+        
+        x = tmp[1]
+        if x in ss:
+            continue
+        
+        ss.add(x)
+        k -= tmp[0]
+        for y in G.neighbors(x):
+            if y in ss:
+                continue
+            degree[y] += 1
+            heappush(h, (degree[y], y))
+        
+    return list(ss)
 
 if __name__ == "__main__":
     argv = sys.argv
@@ -72,8 +95,8 @@ if __name__ == "__main__":
     gs_set = readGivenSet(file_path)
     tmpG = G.copy()
     try:
-        is, k = get_is(G, gs_set, k)
-        greedyExpansion(tmpG, is, k)
-        print("The result size is %d\n", len(is))
+        s, k = get_is(G, gs_set, k)
+        s = greedyExpansion(tmpG, s, k)
+        print("The result size is %d\n", len(s))
     except Exception as error:
         print(error)
