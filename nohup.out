@@ -16340,3 +16340,19 @@ get |Q| = 410507, at 102.465971 s
 
 
 
+300
+500
+1000
+3000
+Data/frb100 300 0
+
+Greedy
+
+Data/frb100
+300
+500
+1000
+3000
+NearLinear_1000edges_train
+
+Data/BerkStan
