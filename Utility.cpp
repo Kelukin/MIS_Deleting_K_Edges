@@ -2,7 +2,7 @@
 // Created by Kelukin on 2020/3/16.
 //
 #include "Utility.h"
-int INDEX_TYPE = 1;
+int ratioSwitch= 0;
 std::vector<int> CANDIDATE_EDGES_NUMBER;
 int LAST_DELETE_TYPE = 1;
 int THRESHOLD = 20;

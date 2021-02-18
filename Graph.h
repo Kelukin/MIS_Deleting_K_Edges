@@ -58,6 +58,7 @@ public:
     void pay_and_try_dominate_max_degree_greedy_delete_edges(ui k = 0);
     void near_maximum_near_linear(ui k = 0);
     void exact_solver(ui k = 0);
+    ui get_edge_number();
 };
 
 #endif //MIS_DELETING_K_EDGES_GRAPH_H

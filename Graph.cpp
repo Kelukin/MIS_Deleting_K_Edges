@@ -352,6 +352,10 @@ int Graph::remove_degree_one_two(std::vector<ui> &degree_ones, std::vector<ui> &
     return res;
 }
 
+ui Graph::get_edge_number() {
+    return m;
+}
+
 int Graph::initial_dominance_and_degree_two_remove(std::vector<ui> &degree_ones, std::vector<ui> &degree_twos,
                                                     char *is, int *degree, char *adj,
                                                     std::vector<std::pair<ui, ui> > &S) {
