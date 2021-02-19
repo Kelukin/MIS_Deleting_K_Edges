@@ -5,7 +5,7 @@ void print_usage(){
     printf("[5]TrainFlag [6]ratioSwitch [7]timeThreshold\n");
     printf("[8]specialTrainSwitch[9]autoLogChooseFlag");
     printf("\talg: greedy, NearLinear, PayAndRecycle, exact\n");
-    printf("\t ratio Switch: 0-absolute value, 1-percentage\n")
+    printf("\t ratio Switch: 0-absolute value, 1-percentage\n");
 //    printf("\tlastDeleteType: 0-basic, 1-smart");
 }
 extern int ratioSwitch;
