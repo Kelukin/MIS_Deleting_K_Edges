@@ -3,7 +3,7 @@
 //
 #include "Utility.h"
 int ratioSwitch= 0;
-int INDEX_TYPE=1;
+int INDEX_TYPE=2;
 std::vector<int> CANDIDATE_EDGES_NUMBER;
 int LAST_DELETE_TYPE = 1;
 int THRESHOLD = 20;
