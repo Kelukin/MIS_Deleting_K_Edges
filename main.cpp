@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
         }
     }
 //    if(argc >= 6)   LAST_DELETE_TYPE = atoi(argv[5]);
-    if(ratioSwitch == 1)   THRESHOLD = 10;
+    //if(ratioSwitch == 1)   THRESHOLD = 10;
     if(argc >= 8)   QUERY_ID = atoi(argv[7]);
     if(argc >= 9)   AUTO_LOG = atoi(argv[8]);
     std::vector<int> v;
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
     graph->read_graph();// read the graph, including of the given set of vertices
 
     if(ratioSwitch == 1){
-        k = double(k) / 100.0 * graph->get_edge_number();
+        k = double(k) / 1000.0 * graph->get_edge_number();
     }
     if(strcmp(argv[1], "greedy") == 0)  graph->greedy(k);
     else if(strcmp(argv[1], "n") == 0 || strcmp(argv[1], "NearLinear") == 0) graph->near_maximum_near_linear(k);
