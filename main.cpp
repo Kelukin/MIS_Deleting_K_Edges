@@ -49,11 +49,11 @@ int main(int argc, char *argv[]) {
     graph->read_graph();// read the graph, including of the given set of vertices
 
     if(ratioSwitch == 1){
-        k = double(k) / 1000.0 * graph->get_edge_number();
+        k = double(k) / 1000.0 * graph->get_edge_number() / 2;
     }
     if(strcmp(argv[1], "greedy") == 0)  graph->greedy(k);
     else if(strcmp(argv[1], "n") == 0 || strcmp(argv[1], "NearLinear") == 0) graph->near_maximum_near_linear(k);
-    else if(strcmp(argv[1], "p") == 0 ||strcmp(argv[1], "PayAndRecycle") == 0) graph->pay_and_try_dominate_max_degree_greedy_delete_edges(k);
+    else if(strcmp(argv[1], "p") == 0 || strcmp(argv[1], "PayAndRecycle") == 0) graph->pay_and_try_dominate_max_degree_greedy_delete_edges(k);
     else if(strcmp(argv[1], "exact") == 0) graph->exact_solver(k);
     //    std::cout << "Hello, World!" << std::endl;
     return 0;
