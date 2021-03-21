@@ -218,6 +218,10 @@ void ProbabilityPayAndTry::init() {
     if(new_m != 0){
         printf("The Index built begin.");
         edgeDeleteIndex = new  ProbabilityDeleteIndex(n, new_m, max_d, edges, is, reverseEdge, pstart, pend, degree);
+        // the two optional way to calculate probability
+        // with or without knowing  about the query set
+        edgeDeleteIndex->calProbability();
+//        edgeDeleteIndex->calProbability(given_set, gs_length);
         printf("The Index built ends.");
     }
     else edgeDeleteIndex = nullptr;

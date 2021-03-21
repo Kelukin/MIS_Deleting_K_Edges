@@ -10,28 +10,27 @@
 #include <unordered_map>
 #include <queue>
 extern std::string LOG_PATH;
-typedef std::pair<unsigned long long, int> edge_cnt;
+typedef std::pair<unsigned long long, double> edge_cnt;
 struct EdgeCnt{
     unsigned long long edgeHash;
-    int cnt;
-    EdgeCnt(unsigned long long _hash, int _cnt): edgeHash(_hash), cnt(_cnt){}
+    double cnt;
+    EdgeCnt(unsigned long long _hash, double _cnt): edgeHash(_hash), cnt(_cnt){}
     bool operator <(const EdgeCnt &ano) const {
         return cnt < ano.cnt;
     }
 };
 class ProbabilityDeleteIndex : public BaseEdgeIndex {
 protected:
-    unsigned long long edge2Ull(ui x, ui y){
+    static unsigned long long edge2Ull(ui x, ui y){
         return ((unsigned long long)x << 32) | y;
     }
-    std::unordered_map<unsigned long long, int> edgeCnt;
-    void calProbability();
     std::priority_queue<EdgeCnt> qu;
 public:
     ProbabilityDeleteIndex(ui n, ui m, int max_d, ui* edges, char* _is, ui* r_edges, ui *pstart, ui *pend, int const *_degree):
             BaseEdgeIndex(n, m, max_d, edges, _is, r_edges, pstart, pend, _degree){
-        calProbability();
     }
+    void calProbability();
+    void calProbability(ui* gs_set, ui gs_len);
     std::pair<ui, ui> recommendEdge();
     bool empty();
 };
