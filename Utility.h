@@ -14,6 +14,7 @@
 #include <queue>
 #include <iostream>
 #include <unordered_set>
+#include <bitset>
 typedef unsigned int ui;
 struct NodeList{
     NodeList* nxt;

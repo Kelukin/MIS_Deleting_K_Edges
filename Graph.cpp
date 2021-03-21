@@ -1647,6 +1647,8 @@ void Graph::pay_and_try_dominate_max_degree_greedy_delete_edges(ui k) {
     seconds = end.tv_sec - start.tv_sec;
     useconds = end.tv_usec - start.tv_usec;
     mtime = seconds * 1000000 + useconds;
+    // 目前是假设所有的索引结构是在离线阶段便已经载入至内存中
+    // 因而实际计算运行时间时将建立索引时间去除
 
     printf("Process time: %lld\n",mtime - BUILT_INDEX_TIME);
 #endif

@@ -34,6 +34,28 @@ void BasicVersion::outputLogConflictEdges() {
     if(fp == NULL){
         fp = fopen(LOG_PATH.c_str(), "w");
     }
+
+    for(int i = 0; i <= n; ++i){
+        // output the vertices in current solution
+        // use the bitwise method to compress the solution
+        // compress it as one string
+        int tmp = 1;
+        char currentBitsets = 0;
+        if(i == n){
+            if(n % 8 != 0){
+                fprintf(fp, "%c", currentBitsets);
+            }
+            break;
+        }
+        if(tmp > 255){
+            fprintf(fp, "%c", currentBitsets);
+            currentBitsets = 0;
+            tmp = 1;
+        }
+        if(currentSolution[i])  currentBitsets |= tmp;
+        tmp <<= 1;
+    }
+
     for(int i = 0; i < n; ++i)
         if(currentSolution[i]){
             for(int j = pstart[i]; j < pstart[i + 1]; ++j){
