@@ -4,6 +4,7 @@
 
 
 #include "ProbabilityPayAndTry.h"
+extern bool OPEN_COST_FUNCTION;
 int ProbabilityPayAndTry::compute_triangle_counts() {
     std::vector<ui> vs;
     for(ui i = 0;i < n;i ++) if(is[i]&&degree[i] > 0) vs.push_back(i);
@@ -220,8 +221,8 @@ void ProbabilityPayAndTry::init() {
         edgeDeleteIndex = new  ProbabilityDeleteIndex(n, new_m, max_d, edges, is, reverseEdge, pstart, pend, degree);
         // the two optional way to calculate probability
         // with or without knowing  about the query set
-        edgeDeleteIndex->calProbability();
-//        edgeDeleteIndex->calProbability(given_set, gs_length);
+        if(!OPEN_COST_FUNCTION) edgeDeleteIndex->calProbability();
+        else edgeDeleteIndex->calProbability(given_set, gs_length);
         printf("The Index built ends.");
     }
     else edgeDeleteIndex = nullptr;

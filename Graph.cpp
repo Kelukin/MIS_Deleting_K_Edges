@@ -108,7 +108,6 @@ int Graph::init_given_set(char *is, int *degree) {
     return cost;
 }
 extern bool Train_Flag;
-extern int QUERY_ID;
 extern int EDGE_NUMBER_CONSTRAINT;
 extern std::vector<int> CANDIDATE_EDGES_NUMBER;
 void Graph::read_graph() {
@@ -150,28 +149,12 @@ void Graph::read_graph() {
     }
     fclose(f);
     if(Train_Flag){
-        if(QUERY_ID == -1){
             gs_length = 0;
-        }else{
-            f = open_file((dir + std::string("_given_set") +
-                            std::string(".bin")).c_str(), "rb");
-//            std::string trainFile = dir + "_trainset_" \
-//            + std::to_string(QUERY_ID) +".bin";
-//            f = open_file(trainFile.c_str(), "rb");
-            if(f != NULL){
-                fread(&gs_length, sizeof(int), 1, f);
-                given_set = new ui[gs_length];
-                fread(given_set, sizeof(int), gs_length, f);
-            } else{
-                gs_length = 0;
-            }
-        }
         printf("Open the train mode.\n");
     }
     else{
-        std::string id_str = (QUERY_ID == -1)? "" : std::to_string(QUERY_ID);
-        f = open_file((dir + std::string("_given_set") + id_str
-                + std::string(".bin")).c_str(), "rb");
+        f = open_file((dir + std::string("_given_set") +
+                 std::string(".bin")).c_str(), "rb");
         if(f != NULL){
             fread(&gs_length, sizeof(int), 1, f);
             given_set = new ui[gs_length];
@@ -842,6 +825,7 @@ void Graph::greedy(ui k) {
     delete[] is;
 }
 
+extern const bool OPEN_COST_FUNCTION;
 int Graph::pay_and_try_framework(PayAndTry* payAndTry) {
 
     payAndTry->init();
@@ -851,21 +835,28 @@ int Graph::pay_and_try_framework(PayAndTry* payAndTry) {
         // Second to recycle the paid k
         // Record the vertices has been affected in last roll, and check its out edge's state, whether is has been
         // delete during the new reduction rules.
-        while(payAndTry->canSafeReduction())
-            payAndTry->safe_reduction();//appear bug after one time of reduction
-        payAndTry->debugCheck();
-        // If we still have the rest bullet for deleting edges
-        if(payAndTry->isDone()) break;
-        if(payAndTry->pay() != -1){
-            continue;
-            // just try to delete some edges
-        }else{
-            // Else, we have to try inexact strategy
-            // And see the next roll activate the reductions in next iteration
-            if(payAndTry->canRiskReduction())
-                payAndTry->riskReduction();
-            else payAndTry->inexact_delete();
-        };
+        if(!OPEN_COST_FUNCTION){
+            while(payAndTry->canSafeReduction())
+                payAndTry->safe_reduction();//appear bug after one time of reduction
+//            payAndTry->debugCheck();
+            // If we still have the rest bullet for deleting edges
+            if(payAndTry->isDone()) break;
+            if(payAndTry->pay() != -1){
+                continue;
+                // just try to delete some edges
+            }else{
+                // Else, we have to try inexact strategy
+                // And see the next roll activate the reductions in next iteration
+                payAndTry->inexact_delete();
+            };
+        }
+        else{
+            while(payAndTry->canSafeReduction())
+                payAndTry->safe_reduction();//appear bug after one time of reduction
+            if(payAndTry->isDone()) break;
+
+        }
+
 
     }while(true);
     payAndTry->appending_action();

@@ -14,9 +14,9 @@ bool LOG_FLAG = false;
 bool LOG_USE = false;
 int EDGE_NUMBER_CONSTRAINT;
 bool Train_Flag = false;
-int QUERY_ID = -1;
 long long BUILT_INDEX_TIME = 0;
 bool AUTO_LOG = false;
+bool OPEN_COST_FUNCTION = false;
 FILE *open_file(const char *filename, const char *mode){
     FILE *f = fopen(filename, mode);
     if(f == NULL){

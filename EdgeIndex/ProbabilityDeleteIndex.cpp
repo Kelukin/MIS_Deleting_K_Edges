@@ -53,13 +53,23 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
     int x, y;
     while(fscanf(fp, "%d", &set_size) != EOF){
         int in_cnt(0); // it is about the weight of this local optima
+        int* tmp_set = new int[set_size];
         for(int i = 0; i < set_size; ++i){
             int tmp;
             fscanf(fp, "%d", &tmp);
+            tmp_set[i] =tmp;
             if(inGS.find(tmp) != inGS.end())    ++in_cnt;
         }
 
-        double score = (in_cnt) / (set_size + gs_len - in_cnt); // use the Jaccord Similarity
+        if(in_cnt){
+            for(int i = 0; i < set_size; ++i)   ++vertexWeight[tmp_set[i]];
+        }
+
+        delete[] tmp_set;
+        // 使用Jaccord Similarity 本身并不合理
+        // 因为希望的是，set_size越大，包含的点愈多则愈加合理
+        // 当前机制下会惩罚过大的set_size
+        double edge_score = double(in_cnt) / gs_len * (double(set_size) / vertex_num);
 
         while(fscanf(fp, "%d%d", &x, &y) != EOF){
             if(x == -1 && y == -1)  break;
@@ -68,8 +78,8 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
             unsigned long long hash = edge2Ull(x, y);
             auto it = edgeCnt.find(hash);
             if(it == edgeCnt.end())
-                edgeCnt[hash] = score;
-            else it->second = it->second + score;
+                edgeCnt[hash] = edge_score;
+            else it->second = it->second + edge_score;
         }
 
     }

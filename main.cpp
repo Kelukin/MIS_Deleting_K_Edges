@@ -3,7 +3,7 @@
 void print_usage(){
     printf("Usage: [1]exe [2]alg [3]graph-dir [4]deleteNumber \n ");
     printf("[5]TrainFlag [6]ratioSwitch [7]timeThreshold\n");
-    printf("[8]specialTrainSwitch[9]autoLogChooseFlag");
+    printf("[8]CostFunctionOpen");
     printf("\talg: greedy, NearLinear, PayAndRecycle, exact\n");
     printf("\t ratio Switch: 0-absolute value, 1-percentage\n");
 //    printf("\tlastDeleteType: 0-basic, 1-smart");
@@ -11,11 +11,10 @@ void print_usage(){
 extern int ratioSwitch;
 extern int LAST_DELETE_TYPE;
 extern int TIME_THRESHOLD;
+extern bool OPEN_COST_FUNCTION;
 extern std::string LOG_PATH;
-extern int QUERY_ID;
 extern bool Train_Flag; // in the train mode, we assumed the query set to be set
 extern bool LOG_FLAG;
-extern bool AUTO_LOG;
 extern int EDGE_NUMBER_CONSTRAINT;
 int main(int argc, char *argv[]) {
     if(argc < 3){
@@ -31,10 +30,9 @@ int main(int argc, char *argv[]) {
             LOG_FLAG = true;
         }
     }
+    if(argc >= 8) OPEN_COST_FUNCTION = true;
 //    if(argc >= 6)   LAST_DELETE_TYPE = atoi(argv[5]);
     //if(ratioSwitch == 1)   THRESHOLD = 10;
-    if(argc >= 8)   QUERY_ID = atoi(argv[7]);
-    if(argc >= 9)   AUTO_LOG = atoi(argv[8]);
     std::vector<int> v;
     LOG_PATH = std::string(argv[2]) + "default.log";
 

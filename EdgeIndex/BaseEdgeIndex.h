@@ -35,11 +35,13 @@ protected:
     DeleteBlock* pools;
     int const *degree;
     int _max_d;
+    ui vertex_num;
     ui up;
 public:
     BaseEdgeIndex(ui n, ui m, int max_d, ui *edges, char *_is, ui *r_edges, ui* pstart, ui *pend, int const *_degree){
         degree = _degree;
         up = m;
+        vertex_num = n;
         pools = new DeleteBlock[m];
         _max_d = max_d;
         is = _is;

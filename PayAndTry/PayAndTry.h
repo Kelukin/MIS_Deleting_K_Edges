@@ -37,8 +37,6 @@ public:
     virtual void debugCheck() = 0;
 //    virtual void recycleK() = 0;
     virtual bool canSafeReduction() = 0;
-    virtual bool canRiskReduction();
-    virtual void riskReduction();
     virtual bool isDone() = 0; // it means all vertices' status have been certain.
     virtual void localSearch();
     int getMISSize();

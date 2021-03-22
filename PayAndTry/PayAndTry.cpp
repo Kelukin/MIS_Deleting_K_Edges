@@ -78,10 +78,3 @@ void PayAndTry::delete_vertex(ui v, char *is, int *degree) {
         }
 }
 
-bool PayAndTry::canRiskReduction() {
-    return false;
-}
-
-void PayAndTry::riskReduction() {
-    return;
-}

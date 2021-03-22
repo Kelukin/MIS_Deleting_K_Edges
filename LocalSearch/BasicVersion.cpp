@@ -78,6 +78,7 @@ void BasicVersion::outputLogConflictEdges() {
                 }
             }
         }
+    fprintf(fp, "-1 -1\n");
     fprintf(fp, "\n");
 }
 void BasicVersion::outputLog(std::vector<int> &inArea, std::vector<int>& outArea, int old_size, int new_size) {

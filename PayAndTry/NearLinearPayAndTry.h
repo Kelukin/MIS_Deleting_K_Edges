@@ -91,8 +91,6 @@ public:
     void appending_action() override ;
     bool check_result(ui mis_size, ui ori_k);
     void debugCheck() override ;
-    bool canRiskReduction() override;
-    void riskReduction() override ;
     ~NearLinearPayAndTry() override{
         delete[] adj;
         delete[] dominate;

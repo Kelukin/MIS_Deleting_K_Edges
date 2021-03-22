@@ -1172,8 +1172,3 @@ bool NearLinearPayAndTry::exist_edge(ui u1, ui u2) {
 
 void NearLinearPayAndTry::debugCheck() {
 }
-bool NearLinearPayAndTry::canRiskReduction() {
-    return false;
-}
-
-void NearLinearPayAndTry::riskReduction() {}
