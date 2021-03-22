@@ -8,7 +8,6 @@
 #include "Utility.h"
 #include "PayAndTry/PayAndTry.h"
 #include "PayAndTry/NearLinearPayAndTry.h"
-#include "PayAndTry/RiskPayAndTry.h"
 #include "ExactSolver.h"
 #include "PayAndTry/ProbabilityPayAndTry.h"
 extern  bool LOCALSEARCH;
