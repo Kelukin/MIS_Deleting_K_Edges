@@ -489,7 +489,6 @@ void ProbabilityPayAndTry::shrink(ui u, ui &end) {
         }
     }
 }
-
 void ProbabilityPayAndTry::addDominated(ui u, ui v) {
     dominate[u] = 1;
     if(edgeDeleteIndex->hasDeletedEdge(u)){
@@ -602,4 +601,17 @@ int ProbabilityPayAndTry::delete_vertex_dominate(ui u) {
             assert(edges[reverseEdge[i]] == u);
         }
     return res;
+}
+bool ProbabilityPayAndTry::cost_function() {
+    // if it return false, then the result would enter the inexact reduction
+    if(k == 0)  return false;
+
+    // it will see which vertex would be deleted in the inexact reduction
+    // and estimate the vertex through the offline sample instance
+    ui inexact_vertex = bin_head[max_d];
+    double now_used_k_percentage = 1.0 - double(k) / ori_k;
+
+    if(now_used_k_percentage >= edgeDeleteIndex->getVertexWeight(inexact_vertex))
+        return false;
+    else return true;
 }

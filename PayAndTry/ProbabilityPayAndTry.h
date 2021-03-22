@@ -23,6 +23,7 @@ public:
 //    void inexact_delete();
     int pay();
     void safe_reduction();
+    bool cost_function();
     ProbabilityPayAndTry(ui _n, ui _m, ui *_given_set, ui _gs_length,
                          ui *_pstart, ui *_edges, ui _k):
                          NearLinearPayAndTry(_n, _m, _given_set, _gs_length, _pstart, _edges, _k){

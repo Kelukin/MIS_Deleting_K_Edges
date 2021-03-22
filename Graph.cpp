@@ -855,8 +855,10 @@ int Graph::pay_and_try_framework(PayAndTry* payAndTry) {
                 payAndTry->safe_reduction();//appear bug after one time of reduction
             if(payAndTry->isDone()) break;
 
+            if( ((ProbabilityPayAndTry*)payAndTry) -> cost_function() ){
+                payAndTry->pay();
+            }else   payAndTry->inexact_delete();
         }
-
 
     }while(true);
     payAndTry->appending_action();

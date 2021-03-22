@@ -25,11 +25,11 @@ protected:
         return ((unsigned long long)x << 32) | y;
     }
     std::priority_queue<EdgeCnt> qu;
-    int* vertexWeight;
+    double* vertexWeight;
 public:
     ProbabilityDeleteIndex(ui n, ui m, int max_d, ui* edges, char* _is, ui* r_edges, ui *pstart, ui *pend, int const *_degree):
             BaseEdgeIndex(n, m, max_d, edges, _is, r_edges, pstart, pend, _degree){
-        vertexWeight = new int[n];
+        vertexWeight = new double[n];
         memset(vertexWeight, 0, sizeof(int) * n);
     }
     ~ProbabilityDeleteIndex(){
@@ -38,6 +38,7 @@ public:
     void calProbability();
     void calProbability(ui* gs_set, ui gs_len);
     std::pair<ui, ui> recommendEdge();
+    double getVertexWeight(ui v);
     bool empty();
 };
 

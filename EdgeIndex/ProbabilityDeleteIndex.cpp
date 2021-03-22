@@ -16,6 +16,21 @@ void ProbabilityDeleteIndex::calProbability() {
 #endif
     FILE *fp = fopen(LOG_PATH.c_str(), "r");
     int x, y;
+    int set_size;
+    while(fscanf(fp, "%d", &set_size) != EOF){
+        for(int i = 0; i < set_size; ++i){
+            int tmp;
+            fscanf(fp, "%d", &tmp);
+        }
+        while(fscanf(fp, "%d%d", &x, &y) != EOF){
+            if(x == -1 && y == -1)  break;
+            unsigned long long hash = edge2Ull(x, y);
+            auto it = edgeCnt.find(hash);
+            if(it == edgeCnt.end())
+                edgeCnt[hash] = 1;
+            else it->second = it->second + 1;
+        }
+    }
     while(fscanf(fp, "%d%d", &x, &y) != EOF){
         unsigned long long hash = edge2Ull(x, y);
         auto it = edgeCnt.find(hash);
@@ -51,6 +66,7 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
     FILE *fp = fopen(LOG_PATH.c_str(), "r");
     int set_size = 0;
     int x, y;
+    double sample_sum = 0;
     while(fscanf(fp, "%d", &set_size) != EOF){
         int in_cnt(0); // it is about the weight of this local optima
         int* tmp_set = new int[set_size];
@@ -61,9 +77,6 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
             if(inGS.find(tmp) != inGS.end())    ++in_cnt;
         }
 
-        if(in_cnt){
-            for(int i = 0; i < set_size; ++i)   ++vertexWeight[tmp_set[i]];
-        }
 
         delete[] tmp_set;
         // 使用Jaccord Similarity 本身并不合理
@@ -71,6 +84,10 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
         // 当前机制下会惩罚过大的set_size
         double edge_score = double(in_cnt) / gs_len * (double(set_size) / vertex_num);
 
+        sample_sum += edge_score;
+        if(in_cnt){
+            for(int i = 0; i < set_size; ++i)   vertexWeight[tmp_set[i]] += edge_score;
+        }
         while(fscanf(fp, "%d%d", &x, &y) != EOF){
             if(x == -1 && y == -1)  break;
             if(in_cnt == 0)  continue;
@@ -87,7 +104,7 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
     for(auto it = edgeCnt.begin(); it != edgeCnt.end(); ++it){
         qu.push(EdgeCnt(it->first, it->second));
     }
-
+    for(int i = 0; i < vertex_num; ++i) vertexWeight[i] = 1 -  vertexWeight[i] / sample_sum;
     fclose(fp);
 #ifdef __LINUX__
     gettimeofday(&end, NULL);
@@ -113,4 +130,8 @@ std::pair<ui, ui> ProbabilityDeleteIndex::recommendEdge() {
 
 bool ProbabilityDeleteIndex::empty() {
     return qu.empty();
+}
+
+double ProbabilityDeleteIndex::getVertexWeight(ui v) {
+    return vertexWeight[v];
 }
