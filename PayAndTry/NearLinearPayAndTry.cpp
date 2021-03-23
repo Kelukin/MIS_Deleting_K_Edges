@@ -1086,6 +1086,7 @@ void NearLinearPayAndTry::deleteEdge(int edgeNo, int u, int v) {
 
 void NearLinearPayAndTry::inexact_delete() {
     //isDone returns false;
+    update_max_d();
     ui x = bin_head[max_d];
     S.push_back(std::make_pair(x, n));
     delete_vertex_dominate(x);

@@ -19,9 +19,10 @@ protected:
     int delete_vertex_dominate(ui u);
     int compute_triangle_counts();
 public:
-    void init();
+    void init() override;
 //    void inexact_delete();
-    int pay();
+    int pay() override;
+    void inexact_delete() override;
     void safe_reduction();
     bool cost_function();
     ProbabilityPayAndTry(ui _n, ui _m, ui *_given_set, ui _gs_length,
