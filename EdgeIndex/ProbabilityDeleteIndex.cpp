@@ -31,13 +31,6 @@ void ProbabilityDeleteIndex::calProbability() {
             else it->second = it->second + 1;
         }
     }
-    while(fscanf(fp, "%d%d", &x, &y) != EOF){
-        unsigned long long hash = edge2Ull(x, y);
-        auto it = edgeCnt.find(hash);
-        if(it == edgeCnt.end())
-            edgeCnt[hash] = 1;
-        else it->second = it->second + 1;
-    }
 
     for(auto it = edgeCnt.begin(); it != edgeCnt.end(); ++it){
         qu.push(EdgeCnt(it->first, it->second));
@@ -78,7 +71,6 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
         }
 
 
-        delete[] tmp_set;
         // 使用Jaccord Similarity 本身并不合理
         // 因为希望的是，set_size越大，包含的点愈多则愈加合理
         // 当前机制下会惩罚过大的set_size
@@ -88,6 +80,7 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
         if(in_cnt){
             for(int i = 0; i < set_size; ++i)   vertexWeight[tmp_set[i]] += edge_score;
         }
+        delete[] tmp_set;
         while(fscanf(fp, "%d%d", &x, &y) != EOF){
             if(x == -1 && y == -1)  break;
             if(in_cnt == 0)  continue;
