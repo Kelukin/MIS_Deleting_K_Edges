@@ -609,9 +609,9 @@ bool ProbabilityPayAndTry::cost_function() {
     // it will see which vertex would be deleted in the inexact reduction
     // and estimate the vertex through the offline sample instance
     ui inexact_vertex = bin_head[max_d];
-    double now_used_k_percentage = 1.0 - double(k) / ori_k;
-    printf("%f %f\n", now_used_k_percentage, edgeDeleteIndex->getVertexWeight(inexact_vertex));
-    if(now_used_k_percentage < edgeDeleteIndex->getVertexWeight(inexact_vertex))
+    double now_unused_k_percentage = double(k) / ori_k;
+    printf("%f %f\n", now_unused_k_percentage, edgeDeleteIndex->getVertexWeight(inexact_vertex));
+    if(now_unused_k_percentage >= edgeDeleteIndex->getVertexWeight(inexact_vertex))
         return false;
     else return true;
 }
