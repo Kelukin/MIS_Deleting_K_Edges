@@ -612,6 +612,6 @@ bool ProbabilityPayAndTry::cost_function() {
     double now_unused_k_percentage = double(k) / ori_k;
     printf("%f %f\n", now_unused_k_percentage, edgeDeleteIndex->getVertexWeight(inexact_vertex));
     if(now_unused_k_percentage >= edgeDeleteIndex->getVertexWeight(inexact_vertex))
-        return false;
-    else return true;
+        return true;
+    else return false;
 }
