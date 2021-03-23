@@ -217,13 +217,13 @@ void ProbabilityPayAndTry::init() {
     fixed = new char[n];
     memset(fixed, 0, sizeof(char) * n);
     if(new_m != 0){
-        printf("The Index built begin.");
+        printf("The Index built begin.\n");
         edgeDeleteIndex = new  ProbabilityDeleteIndex(n, new_m, max_d, edges, is, reverseEdge, pstart, pend, degree);
         // the two optional way to calculate probability
         // with or without knowing  about the query set
         if(!OPEN_COST_FUNCTION) edgeDeleteIndex->calProbability();
         else edgeDeleteIndex->calProbability(given_set, gs_length);
-        printf("The Index built ends.");
+        printf("The Index built ends.\n");
     }
     else edgeDeleteIndex = nullptr;
 }
