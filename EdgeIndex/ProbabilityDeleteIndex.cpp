@@ -80,7 +80,7 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
 //        version 2
         double edge_score = (in_cnt + 1) * (in_cnt + 1) * (double(set_size) / vertex_num);
 
-        sample_sum += edge_score;
+        sample_sum += vertex_score;
         if(in_cnt){
             for(int i = 0; i < set_size; ++i)   vertexWeight[tmp_set[i]] += vertex_score;
         }
