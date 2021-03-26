@@ -610,18 +610,18 @@ bool ProbabilityPayAndTry::cost_function() {
     // and estimate the vertex through the offline sample instance
     update_max_d();
     ui inexact_vertex = bin_head[max_d];
-    if(edgeDeleteIndex->getVertexWeight(inexact_vertex) <= 1e-2)
+    if(edgeDeleteIndex->getVertexWeight(inexact_vertex) <= 5e-2)
         return false;
     double now_unused_k_percentage = double(k) / ori_k;
 //    printf("%f %f\n", now_unused_k_percentage, edgeDeleteIndex->getVertexWeight(inexact_vertex));
-    if(now_unused_k_percentage >= edgeDeleteIndex->getVertexWeight(inexact_vertex) / 100.0)
+    if(now_unused_k_percentage >= edgeDeleteIndex->getVertexWeight(inexact_vertex) / 10.0)
         return true;
     else return false;
 }
 
 void ProbabilityPayAndTry::inexact_delete() {
     ui x = bin_head[max_d];
-    if(!OPEN_COST_FUNCTION || edgeDeleteIndex->getVertexWeight(x) > 1e-2)
+    if(!OPEN_COST_FUNCTION || edgeDeleteIndex->getVertexWeight(x) > 5e-2)
         NearLinearPayAndTry::inexact_delete();
     else{
         for(ui i = pstart[x]; i < pend[x]; ++i){
