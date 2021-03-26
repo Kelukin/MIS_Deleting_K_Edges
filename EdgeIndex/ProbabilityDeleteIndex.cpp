@@ -88,7 +88,7 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
         while(fscanf(fp, "%d%d", &x, &y) != EOF){
             if(x == -1 && y == -1)  break;
 
-            if(in_cnt == 0)  continue;
+//            if(in_cnt == 0)  continue;
 
             unsigned long long hash = edge2Ull(x, y);
             auto it = edgeCnt.find(hash);
