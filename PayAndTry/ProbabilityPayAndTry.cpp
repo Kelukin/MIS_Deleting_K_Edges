@@ -4,6 +4,7 @@
 
 
 #include "ProbabilityPayAndTry.h"
+#include <cmath>
 extern bool OPEN_COST_FUNCTION;
 int ProbabilityPayAndTry::compute_triangle_counts() {
     std::vector<ui> vs;
@@ -614,7 +615,15 @@ bool ProbabilityPayAndTry::cost_function() {
         return false;
     double now_unused_k_percentage = double(k) / ori_k;
 //    printf("%f %f\n", now_unused_k_percentage, edgeDeleteIndex->getVertexWeight(inexact_vertex));
-    if(now_unused_k_percentage >= edgeDeleteIndex->getVertexWeight(inexact_vertex) / 10.0)
+    bool judgeCondition ;
+
+    //version 1
+    judgeCondition = now_unused_k_percentage
+                    >= edgeDeleteIndex->getVertexWeight(inexact_vertex) / 10.0;
+    //version 2
+    judgeCondition = (k > 15) ||
+            1 / (1 + exp(8 - k)) >= edgeDeleteIndex->getVertexWeight(inexact_vertex);
+    if( judgeCondition )
         return true;
     else return false;
 }
