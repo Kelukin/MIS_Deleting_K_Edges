@@ -47,19 +47,14 @@ void ProbabilityDeleteIndex::calProbability() {
 
     printf("The log read for estimating probability has been finished!\n");
 }
-
-void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
-    std::unordered_map<unsigned long long, double> edgeCnt;
-#ifdef __LINUX__
-    struct timeval start, end;
-    gettimeofday(&start, NULL);
-#endif
-    std::set<ui> inGS;
-    for(int i = 0; i < gs_len; ++i) inGS.insert(gs_set[i]);
-    FILE *fp = fopen(LOG_PATH.c_str(), "r");
+void ProbabilityDeleteIndex::processOneFile(FILE* fp,
+                                            std::unordered_map<unsigned long long, double> &edgeCnt,
+                                            std::set<ui> &inGS,
+                                            ui gs_len,
+                                            double& sample_sum,
+                                            int edgeNumber){
     int set_size = 0;
     int x, y;
-    double sample_sum = 0;
     while(fscanf(fp, "%d", &set_size) != EOF){
         int in_cnt(0); // it is about the weight of this local optima
         int* tmp_set = new int[set_size];
@@ -74,11 +69,11 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
         // 使用Jaccord Similarity 本身并不合理
         // 因为希望的是，set_size越大，包含的点愈多则愈加合理
         // 当前机制下会惩罚过大的set_size
-        double vertex_score = double(in_cnt) / gs_len * (double(set_size) / vertex_num);
+        double vertex_score = double(in_cnt) / gs_len * (double(set_size) / vertex_num) * edgeNumber;
 //         version 1
 //        double edge_score = double(in_cnt) / gs_len * (double(set_size) / vertex_num);
 //        version 2
-        double edge_score = (in_cnt + 1) * (in_cnt + 1) * (double(set_size) / vertex_num);
+        double edge_score = (in_cnt + 1) * (in_cnt + 1) * (double(set_size) / vertex_num) / edgeNumber;
 
         sample_sum += vertex_score;
         if(in_cnt){
@@ -98,12 +93,41 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
         }
 
     }
+}
+void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
+    std::unordered_map<unsigned long long, double> edgeCnt;
+#ifdef __LINUX__
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
+#endif
+    std::set<ui> inGS;
+    for(int i = 0; i < gs_len; ++i) inGS.insert(gs_set[i]);
+#ifdef BATCH_TRAINING
+    std::string log_list_path = LOG_PATH + "list.txt";
+    FILE* log_list = fopen(log_list_path.c_str(), "r");
+    char tmpFilePath[1000];
+    ui edgeNumber;
+    ui minimalNumber = -1;
+    double sample_sum = 0;
+    while(fscanf(log_list, "%s%d",tmpFilePath, &edgeNumber) != EOF){
+        minimalNumber = (minimalNumber == -1 || edgeNumber < minimalNumber)? edgeNumber : minimalNumber;
+        if(edgeNumber > tot_k)  continue;
 
+        FILE *fp = fopen(LOG_PATH.c_str(), "r");
+        processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, edgeNumber);
+        fclose(fp);
+    }
+    fclose(log_list);
+#else
+    FILE *fp = fopen(LOG_PATH.c_str(), "r");
+    double sample_sum = 0;
+    processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum);
+    fclose(fp);
+#endif
     for(auto it = edgeCnt.begin(); it != edgeCnt.end(); ++it){
         qu.push(EdgeCnt(it->first, it->second));
     }
     for(int i = 0; i < vertex_num; ++i) vertexWeight[i] = 1 -  vertexWeight[i] / sample_sum;
-    fclose(fp);
 #ifdef __LINUX__
     gettimeofday(&end, NULL);
     long long  seconds, useconds;

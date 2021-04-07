@@ -32,7 +32,16 @@ void BasicVersion::perturbation(char *is, int &res_k, std::vector<int>& inArea, 
 void BasicVersion::outputLogConflictEdges() {
     if(!LOG_FLAG)   return;
     if(fp == NULL){
+#ifdef BATCH_TRAINING
+        std::string saveFilePath = LOG_PATH +  std::to_string(total_k);
+        std::string log_list_path = LOG_PATH + "list.txt";
+        FILE* log_list = fopen(log_list_path.c_str(), "a");
+        fprintf(log_list, "%s %d\n", saveFilePath.c_str(), total_k);
+        fclose(log_list);
+        fp = fopen(saveFilePath.c_str(), "w");
+#else
         fp = fopen(LOG_PATH.c_str(), "w");
+#endif
     }
 
 //    for(int i = 0; i <= n; ++i){
@@ -84,7 +93,16 @@ void BasicVersion::outputLogConflictEdges() {
 void BasicVersion::outputLog(std::vector<int> &inArea, std::vector<int>& outArea, int old_size, int new_size) {
     if(!LOG_FLAG)   return;
     if(fp == NULL){
+#ifdef BATCH_TRAINING
+        std::string saveFilePath = LOG_PATH +  std::to_string(total_k);
+        std::string log_list_path = LOG_PATH + "list.txt";
+        FILE* log_list = fopen(log_list_path.c_str(), "a");
+        fprintf(log_list, "%s %d\n", saveFilePath.c_str(), total_k);
+        fclose(log_list);
+        fp = fopen(saveFilePath.c_str(), "w");
+#else
         fp = fopen(LOG_PATH.c_str(), "w");
+#endif
     }
 
 //    printf("write\n");

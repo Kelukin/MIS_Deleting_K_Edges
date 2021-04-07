@@ -30,6 +30,7 @@ void put_out_S(int nodeNo, char *is, ui *pstart, ui *edges, NodeList* pool,
 void put_in_S(int nodeNo, char *is, ui *pstart, ui *edges, NodeList* pool,
               int &ub_in, NodeList** inDegreeHead, NodeList** outDegreeHead);
 std::vector<double> getLogProbability(int vertexNum);
+#define BATCH_TRAINING
 #define __LINUX__
 #ifdef __LINUX__
 #include <sys/time.h>
