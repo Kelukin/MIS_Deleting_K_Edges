@@ -114,7 +114,7 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
         minimalNumber = (minimalNumber == -1 || edgeNumber < minimalNumber)? edgeNumber : minimalNumber;
         if(edgeNumber > tot_k)  continue;
 
-        FILE *fp = fopen(LOG_PATH.c_str(), "r");
+        FILE *fp = fopen(tmpFilePath, "r");
         processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, edgeNumber);
         fclose(fp);
     }

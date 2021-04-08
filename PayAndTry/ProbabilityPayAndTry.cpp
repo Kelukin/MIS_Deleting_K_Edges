@@ -605,10 +605,10 @@ int ProbabilityPayAndTry::delete_vertex_dominate(ui u) {
 }
 bool ProbabilityPayAndTry::cost_function() {
     // if it return false, then the result would enter the inexact reduction
-    if(edgeDeleteIndex->empty())
-        printf("Index Empty\n");
-    if(k == 0)
-        printf("k equal to 0\n");
+//    if(edgeDeleteIndex->empty())
+//        printf("Index Empty\n");
+//    if(k == 0)
+//        printf("k equal to 0\n");
     if(k == 0 || edgeDeleteIndex->empty())  return false;
 
     // it will see which vertex would be deleted in the inexact reduction
