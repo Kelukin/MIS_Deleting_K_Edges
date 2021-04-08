@@ -69,7 +69,7 @@ void ProbabilityDeleteIndex::processOneFile(FILE* fp,
         // 使用Jaccord Similarity 本身并不合理
         // 因为希望的是，set_size越大，包含的点愈多则愈加合理
         // 当前机制下会惩罚过大的set_size
-        double vertex_score = double(in_cnt) / gs_len * (double(set_size) / vertex_num) ;
+        double vertex_score = double(in_cnt) / gs_len * (double(set_size) / vertex_num) * edgeNumber ;
 //         version 1
 //        double edge_score = double(in_cnt) / gs_len * (double(set_size) / vertex_num);
 //        version 2
