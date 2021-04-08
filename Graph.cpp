@@ -857,8 +857,9 @@ int Graph::pay_and_try_framework(PayAndTry* payAndTry) {
 
 //            printf("start to estimate:\n");
             bool tmp = ((ProbabilityPayAndTry*)payAndTry) -> cost_function();
-//            if(tmp) printf("pay\n");
-//            else printf("inexact\n");
+            if(tmp) printf("pay\n");
+            else printf("inexact\n");
+
             if(tmp){
                 payAndTry->pay();
             }else   payAndTry->inexact_delete();

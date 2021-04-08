@@ -618,8 +618,8 @@ bool ProbabilityPayAndTry::cost_function() {
     bool judgeCondition ;
 
     //version 1
-    judgeCondition = now_unused_k_percentage
-                    >= edgeDeleteIndex->getVertexWeight(inexact_vertex) / 10.0;
+//    judgeCondition = now_unused_k_percentage
+//                    >= edgeDeleteIndex->getVertexWeight(inexact_vertex) / 10.0;
     //version 2
     judgeCondition = (k > 15) ||
             1 / (1 + exp(8 - k)) >= edgeDeleteIndex->getVertexWeight(inexact_vertex);

@@ -125,12 +125,9 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
     processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum);
     fclose(fp);
 #endif
-    int tmpCnt = 0;
     for(auto it = edgeCnt.begin(); it != edgeCnt.end(); ++it){
         qu.push(EdgeCnt(it->first, it->second));
-        ++tmpCnt;
     }
-    printf("tmpCnt: %d\n", tmpCnt);
     for(int i = 0; i < vertex_num; ++i) vertexWeight[i] = 1 -  vertexWeight[i] / sample_sum;
 #ifdef __LINUX__
     gettimeofday(&end, NULL);
