@@ -106,11 +106,13 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
     std::string log_list_path = LOG_PATH + "list.txt";
     FILE* log_list = fopen(log_list_path.c_str(), "r");
     char tmpFilePath[1000];
-    ui edgeNumber;
+    int edgeNumber;
     ui minimalNumber = -1;
     double sample_sum = 0;
+    printf("Begin to calculate probability\n");
     while(fscanf(log_list, "%s%d",tmpFilePath, &edgeNumber) != EOF){
         minimalNumber = (minimalNumber == -1 || edgeNumber < minimalNumber)? edgeNumber : minimalNumber;
+        printf("%s %d %d\n",tmpFilePath, edgeNumber, tot_k);
         if(edgeNumber > tot_k)  continue;
 
         FILE *fp = fopen(LOG_PATH.c_str(), "r");
