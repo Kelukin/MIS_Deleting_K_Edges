@@ -112,7 +112,6 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
     printf("Begin to calculate probability\n");
     while(fscanf(log_list, "%s%d",tmpFilePath, &edgeNumber) != EOF){
         minimalNumber = (minimalNumber == -1 || edgeNumber < minimalNumber)? edgeNumber : minimalNumber;
-        printf("%s %d %d\n",tmpFilePath, edgeNumber, tot_k);
         if(edgeNumber > tot_k)  continue;
 
         FILE *fp = fopen(LOG_PATH.c_str(), "r");
@@ -126,9 +125,12 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
     processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum);
     fclose(fp);
 #endif
+    int tmpCnt = 0;
     for(auto it = edgeCnt.begin(); it != edgeCnt.end(); ++it){
         qu.push(EdgeCnt(it->first, it->second));
+        ++tmpCnt;
     }
+    printf("tmpCnt: %d\n", tmpCnt);
     for(int i = 0; i < vertex_num; ++i) vertexWeight[i] = 1 -  vertexWeight[i] / sample_sum;
 #ifdef __LINUX__
     gettimeofday(&end, NULL);
