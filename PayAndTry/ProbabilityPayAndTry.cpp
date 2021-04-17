@@ -638,10 +638,12 @@ bool ProbabilityPayAndTry::cost_function() {
 }
 
 void ProbabilityPayAndTry::inexact_delete() {
+    update_max_d();
     ui x = bin_head[max_d];
     if(!OPEN_COST_FUNCTION)
         NearLinearPayAndTry::inexact_delete();
     else{
+        update_min_d();
         double inexact_score = edgeDeleteIndex->getVertexWeight(x);
         ui small_vertex = bin_head[min_d];
         double small_score = 1 - (edgeDeleteIndex->getVertexWeight(small_vertex) * degree[small_vertex] );
