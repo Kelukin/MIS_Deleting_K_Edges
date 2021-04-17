@@ -639,6 +639,7 @@ void NearLinearPayAndTry::update_min_d() {
                     bin_next[v] = bin_head[degree[v]];
                     bin_head[degree[v]] = v;
                     min_d = degree[v];
+                    bin_head = tmp;
                     return;
                 }
             }else{
