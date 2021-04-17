@@ -628,10 +628,11 @@ void NearLinearPayAndTry::update_max_d(){
     }while(v == -1);
 }
 void NearLinearPayAndTry::update_min_d() {
-    min_d = 1;
+    min_d = 3;
     int v = -1;
     do {
         while (min_d < max_d && bin_head[min_d] == -1) ++min_d;
+        if(min_d == max_d)  return;
         for(v = bin_head[min_d]; v != -1;){
             int tmp = bin_next[v];
             if(!is[v] || degree[v] < min_d){
