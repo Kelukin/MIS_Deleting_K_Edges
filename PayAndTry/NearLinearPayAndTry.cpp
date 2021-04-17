@@ -611,8 +611,12 @@ void NearLinearPayAndTry::update_max_d(){
         for(v = bin_head[max_d]; v != -1;){
             int tmp = bin_next[v];
             if(!is[v] || degree[v] < max_d){
-                bin_next[v] = bin_head[degree[v]];
-                bin_head[degree[v]] = v;
+                if(is[v]){
+
+                    bin_next[v] = bin_head[degree[v]];
+                    bin_head[degree[v]] = v;
+                }
+
             }else{
                 bin_head[max_d] = v;
                 break;
@@ -621,6 +625,30 @@ void NearLinearPayAndTry::update_max_d(){
             v = tmp;
         }
         if(v == -1) bin_head[max_d] = -1;
+    }while(v == -1);
+}
+void NearLinearPayAndTry::update_min_d() {
+    min_d = 1;
+    int v = -1;
+    do {
+        while (min_d < max_d && bin_head[min_d] == -1) ++min_d;
+        for(v = bin_head[min_d]; v != -1;){
+            int tmp = bin_next[v];
+            if(!is[v] || degree[v] < min_d){
+                if(is[v]){
+                    bin_next[v] = bin_head[degree[v]];
+                    bin_head[degree[v]] = v;
+                    min_d = degree[v];
+                    break;
+                }
+            }else{
+                bin_head[min_d] = v;
+                break;
+            }
+
+            v = tmp;
+        }
+        if(v == -1) bin_head[min_d] = -1;
     }while(v == -1);
 }
 

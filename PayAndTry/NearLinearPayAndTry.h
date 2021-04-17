@@ -16,6 +16,7 @@ protected:
     bool delete_tri;
     ui *tri;
     int max_d;
+    int min_d;
     int *bin_head;
     int *bin_next;
     ui *reverseEdge;
@@ -39,6 +40,7 @@ protected:
     virtual void update_max_d();
     bool dominated_check(ui u);
     void edge_rewire(ui u, ui u1, ui u2);
+    void update_min_d();
     void clear_S();
     virtual ui edge_rewire(ui u, const ui *pend, ui v, ui w);
     bool exist_edge(ui u1, ui u2) override ;
