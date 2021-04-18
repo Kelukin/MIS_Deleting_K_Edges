@@ -78,9 +78,9 @@ void ProbabilityDeleteIndex::processOneFile(FILE* fp,
 //         version 1
 //        double edge_score = double(in_cnt) / gs_len * (double(set_size) / vertex_num);
 //        version 2
-        double edge_score = (in_cnt + 1) * (in_cnt + 1) * (double(set_size) / vertex_num) / edgeNumber;
+//        double edge_score = (in_cnt + 1) * (in_cnt + 1) * (double(set_size) / vertex_num) / edgeNumber;
 //      version 3
-//        double edge_score = (double(set_size) / vertex_num) / edgeNumber;
+        double edge_score = (double(set_size) ) / edgeNumber;
         sample_sum += vertex_score;
         if(vertex_score != 0){
             for(int i = 0; i < set_size; ++i)   vertexWeight[tmp_set[i]] += vertex_score;
