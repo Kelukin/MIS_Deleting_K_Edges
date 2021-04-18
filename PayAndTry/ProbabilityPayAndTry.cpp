@@ -632,8 +632,10 @@ bool ProbabilityPayAndTry::cost_function() {
 //    judgeCondition = now_unused_k_percentage
 //                    >= edgeDeleteIndex->getVertexWeight(inexact_vertex) / 10.0;
     //version 2
-    double pay_score = 1 / (1 + exp(8 - k)) ;
-    judgeCondition = (k > 15) ||(pay_score > small_score && pay_score > inexact_score);
+//    double pay_score = 1 / (1 + exp(8 - k)) ;
+    // version 4_19
+    double pay_score = (k >= ori_k / 20)? 1 : 1 / (1 + 2 * double(20) / ori_k * (ori_k / 20.0 - k)) ;
+    judgeCondition = (pay_score > small_score && pay_score > inexact_score);
     if( judgeCondition )
         return true;
     else return false;
