@@ -27,7 +27,7 @@ private:
                         std::set<ui> &inGS,
                         ui gs_len,
                         double &sample_sum,
-                        int edgeNumber = 1);
+                        int edgeWeight = 1);
 protected:
     static unsigned long long edge2Ull(ui x, ui y){
         return ((unsigned long long)x << 32) | y;
