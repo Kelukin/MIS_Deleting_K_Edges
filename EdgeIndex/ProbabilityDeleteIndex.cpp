@@ -119,12 +119,13 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
     std::map<int, std::string> number2FilePath;
     while(fscanf(log_list, "%s%d",tmpFilePath, &edgeNumber) != EOF){
         number2FilePath[edgeNumber] = std::string(tmpFilePath);
-        FILE *fp = fopen(tmpFilePath, "r");
-        processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, (edgeNumber > tot_k)? edgeNumber - tot_k : tot_k - edgeNumber + 1);
-        fclose(fp);
+//        FILE *fp = fopen(tmpFilePath, "r");
+//        processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, (edgeNumber > tot_k)? edgeNumber - tot_k : tot_k - edgeNumber + 1);
+//        fclose(fp);
     }
     fclose(log_list);
     auto it = number2FilePath.lower_bound(tot_k);
+    printf("begin to find log\n");
     if(it == number2FilePath.end()){
         --it;
         edgeNumber = it->first;
@@ -140,7 +141,7 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
         ++it;
         if(it != number2FilePath.end()){
             edgeNumber = it->first;
-            FILE *fp = fopen(it->second.c_str(), "r");
+            fp = fopen(it->second.c_str(), "r");
             processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, (edgeNumber > tot_k)? edgeNumber - tot_k : tot_k - edgeNumber + 1);
             fclose(fp);
         }
@@ -148,7 +149,7 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
         if(it != number2FilePath.begin()){
             --it;
             edgeNumber = it->first;
-            FILE *fp = fopen(it->second.c_str(), "r");
+            fp = fopen(it->second.c_str(), "r");
             processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, (edgeNumber > tot_k)? edgeNumber - tot_k : tot_k - edgeNumber + 1);
             fclose(fp);
         }
