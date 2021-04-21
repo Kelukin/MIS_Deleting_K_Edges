@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <queue>
 #include <set>
+#include <map>
 extern std::string LOG_PATH;
 typedef std::pair<unsigned long long, double> edge_cnt;
 struct EdgeCnt{

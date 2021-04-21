@@ -116,25 +116,42 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
     ui minimalNumber = -1;
     double sample_sum = 0;
     printf("Begin to calculate probability\n");
+    std::map<int, std::string> number2FilePath;
     while(fscanf(log_list, "%s%d",tmpFilePath, &edgeNumber) != EOF){
-        minimalNumber = (minimalNumber == -1 || edgeNumber < minimalNumber)? edgeNumber : minimalNumber;
-        if(edgeNumber > tot_k)  continue;
-
+        number2FilePath[edgeNumber] = std::string(tmpFilePath, strlen(tmpFilePath));
         FILE *fp = fopen(tmpFilePath, "r");
         processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, (edgeNumber > tot_k)? edgeNumber - tot_k : tot_k - edgeNumber + 1);
         fclose(fp);
     }
     fclose(log_list);
-    if(minimalNumber > tot_k){
-        log_list = fopen(log_list_path.c_str(), "r");
-        while(fscanf(log_list, "%s%d",tmpFilePath, &edgeNumber) != EOF){
-            if(edgeNumber != minimalNumber)  continue;
-
-            FILE *fp = fopen(tmpFilePath, "r");
+    auto it = number2FilePath.lower_bound(tot_k);
+    if(it == number2FilePath.end()){
+        --it;
+        edgeNumber = it->first;
+        FILE *fp = fopen(it->second.c_str(), "r");
+        processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, (edgeNumber > tot_k)? edgeNumber - tot_k : tot_k - edgeNumber + 1);
+        fclose(fp);
+    }
+    else{
+        edgeNumber = it->first;
+        FILE *fp = fopen(it->second.c_str(), "r");
+        processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, (edgeNumber > tot_k)? edgeNumber - tot_k : tot_k - edgeNumber + 1);
+        fclose(fp);
+        ++it;
+        if(it != number2FilePath.end()){
+            edgeNumber = it->first;
+            FILE *fp = fopen(it->second.c_str(), "r");
             processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, (edgeNumber > tot_k)? edgeNumber - tot_k : tot_k - edgeNumber + 1);
             fclose(fp);
         }
-        fclose(log_list);
+        --it;
+        if(it != number2FilePath.begin()){
+            --it;
+            edgeNumber = it->first;
+            FILE *fp = fopen(it->second.c_str(), "r");
+            processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, (edgeNumber > tot_k)? edgeNumber - tot_k : tot_k - edgeNumber + 1);
+            fclose(fp);
+        }
     }
 #else
     FILE *fp = fopen(LOG_PATH.c_str(), "r");
