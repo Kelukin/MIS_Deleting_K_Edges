@@ -72,7 +72,7 @@ void ProbabilityDeleteIndex::processOneFile(FILE* fp,
         // version 1
 //        double vertex_score = double(in_cnt) / gs_len * (double(set_size) / vertex_num) * edgeNumber ;
 //        version 2
-        double vertex_score = (double(set_size) / vertex_num) * edgeWeight ;
+        double vertex_score = (double(set_size) / vertex_num) / edgeWeight ;
         // version 3
 //        double vertex_score = double(in_cnt + 1) * (double(set_size) / vertex_num) * edgeNumber ;
 //         version 1
@@ -80,7 +80,7 @@ void ProbabilityDeleteIndex::processOneFile(FILE* fp,
 //        version 2
 //        double edge_score = (in_cnt + 1) * (in_cnt + 1) * (double(set_size) / vertex_num) / edgeNumber;
 //      version 3
-        double edge_score = (double(set_size) ) / edgeWeight;
+        double edge_score = (double(set_size) ) * edgeWeight;
         sample_sum += vertex_score;
         if(vertex_score != 0){
             for(int i = 0; i < set_size; ++i)   vertexWeight[tmp_set[i]] += vertex_score;
@@ -125,7 +125,6 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
     }
     fclose(log_list);
     auto it = number2FilePath.lower_bound(tot_k);
-    printf("begin to find log\n");
     if(it == number2FilePath.end()){
         --it;
         edgeNumber = it->first;
