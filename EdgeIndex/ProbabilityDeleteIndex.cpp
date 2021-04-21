@@ -118,7 +118,7 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
     printf("Begin to calculate probability\n");
     std::map<int, std::string> number2FilePath;
     while(fscanf(log_list, "%s%d",tmpFilePath, &edgeNumber) != EOF){
-        number2FilePath[edgeNumber] = std::string(tmpFilePath, strlen(tmpFilePath));
+        number2FilePath[edgeNumber] = std::string(tmpFilePath);
         FILE *fp = fopen(tmpFilePath, "r");
         processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, (edgeNumber > tot_k)? edgeNumber - tot_k : tot_k - edgeNumber + 1);
         fclose(fp);
