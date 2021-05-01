@@ -52,7 +52,7 @@ void ProbabilityDeleteIndex::processOneFile(FILE* fp,
                                             std::set<ui> &inGS,
                                             ui gs_len,
                                             double& sample_sum,
-                                            int edgeNumber){
+                                            int edgeWeight){
     int set_size = 0;
     int x, y;
     while(fscanf(fp, "%d", &set_size) != EOF){
@@ -72,7 +72,7 @@ void ProbabilityDeleteIndex::processOneFile(FILE* fp,
         // version 1
 //        double vertex_score = double(in_cnt) / gs_len * (double(set_size) / vertex_num) * edgeNumber ;
 //        version 2
-        double vertex_score = (double(set_size) / vertex_num) * edgeNumber ;
+        double vertex_score = (double(set_size) / vertex_num) *                      edgeWeight ;
         // version 3
 //        double vertex_score = double(in_cnt + 1) * (double(set_size) / vertex_num) * edgeNumber ;
 //         version 1
@@ -80,7 +80,7 @@ void ProbabilityDeleteIndex::processOneFile(FILE* fp,
 //        version 2
 //        double edge_score = (in_cnt + 1) * (in_cnt + 1) * (double(set_size) / vertex_num) / edgeNumber;
 //      version 3
-        double edge_score = (double(set_size) ) / edgeNumber;
+        double edge_score = (double(set_size) ) / edgeWeight;
         sample_sum += vertex_score;
         if(vertex_score != 0){
             for(int i = 0; i < set_size; ++i)   vertexWeight[tmp_set[i]] += vertex_score;
@@ -116,15 +116,46 @@ void ProbabilityDeleteIndex::calProbability(ui *gs_set, ui gs_len) {
     ui minimalNumber = -1;
     double sample_sum = 0;
     printf("Begin to calculate probability\n");
+    std::map<int, std::string> number2FilePath;
     while(fscanf(log_list, "%s%d",tmpFilePath, &edgeNumber) != EOF){
-        minimalNumber = (minimalNumber == -1 || edgeNumber < minimalNumber)? edgeNumber : minimalNumber;
-        if(edgeNumber > tot_k)  continue;
-
-        FILE *fp = fopen(tmpFilePath, "r");
+        number2FilePath[edgeNumber] = std::string(tmpFilePath);
+//        FILE *fp = fopen(tmpFilePath, "r");
+//        processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, (edgeNumber > tot_k)? edgeNumber - tot_k : tot_k - edgeNumber + 1);
+//        fclose(fp);
+    }
+    fclose(log_list);
+    auto it = number2FilePath.lower_bound(tot_k);
+    if(it == number2FilePath.end()){
+        --it;
+        edgeNumber = it->first;
+        FILE *fp = fopen(it->second.c_str(), "r");
         processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, edgeNumber);
         fclose(fp);
     }
-    fclose(log_list);
+    else{
+        edgeNumber = it->first;
+        FILE *fp = fopen(it->second.c_str(), "r");
+        processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, edgeNumber);
+//        processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, (edgeNumber > tot_k)? edgeNumber - tot_k : tot_k - edgeNumber + 1);
+        fclose(fp);
+        ++it;
+        if(it != number2FilePath.end()){
+            edgeNumber = it->first;
+            fp = fopen(it->second.c_str(), "r");
+            processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, edgeNumber);
+//            processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, (edgeNumber > tot_k)? edgeNumber - tot_k : tot_k - edgeNumber + 1);
+            fclose(fp);
+        }
+        --it;
+        if(it != number2FilePath.begin()){
+            --it;
+            edgeNumber = it->first;
+            fp = fopen(it->second.c_str(), "r");
+            processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, edgeNumber);
+//            processOneFile(fp, edgeCnt, inGS, gs_len, sample_sum, (edgeNumber > tot_k)? edgeNumber - tot_k : tot_k - edgeNumber + 1);
+            fclose(fp);
+        }
+    }
 #else
     FILE *fp = fopen(LOG_PATH.c_str(), "r");
     double sample_sum = 0;
