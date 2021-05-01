@@ -1,7 +1,7 @@
 # Compile
 using the following scripts:
 ```
-cmake
+cmake .
 make clean
 make
 ```
